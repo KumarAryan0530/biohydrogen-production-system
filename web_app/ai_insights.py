@@ -34,7 +34,7 @@ def generate_executive_summary(run_data):
     Here is the summary data from the run:
     Optimal pH: {run_data.get('optimal_pH', run_data.get('optimal_ph'))}
     Optimal Temperature: {run_data.get('optimal_temperature', run_data.get('optimal_temp'))} °C
-    Total Hydrogen Yield (30 days): {run_data.get('hydrogen_yield', run_data.get('optimal_h2_yield'))} cubic meters
+    Total Hydrogen Yield: {run_data.get('hydrogen_yield', run_data.get('optimal_h2_yield'))} cubic meters
     MPC Improvement over uncontrolled: {run_data.get('improvement_pct', run_data.get('mpc_improvement'))} %
     Levelized Cost of Hydrogen (LCOH): ${run_data.get('lcoh')} / kg
     

@@ -32,6 +32,7 @@ def generate_executive_summary(run_data):
     I have just run an anaerobic digestion simulation (pyADM1) with Model Predictive Control. 
     
     Here is the summary data from the run:
+    Simulation Days: {run_data.get('baseline_days', 'Unknown')}
     Optimal pH: {run_data.get('optimal_pH', run_data.get('optimal_ph'))}
     Optimal Temperature: {run_data.get('optimal_temperature', run_data.get('optimal_temp'))} °C
     Total Hydrogen Yield: {run_data.get('hydrogen_yield', run_data.get('optimal_h2_yield'))} cubic meters
@@ -84,6 +85,7 @@ def chat_with_run(run_data, chat_history, new_message):
     system_prompt = f"""
     You are the "Biohydrogen Assistant". The user is viewing a detailed dashboard of a dark fermentation simulation run.
     The primary data for this run is:
+    Simulation Days: {run_data.get('baseline_days', 'Unknown')}
     Optimal pH: {run_data.get('optimal_pH', run_data.get('optimal_ph'))}
     Optimal Temp: {run_data.get('optimal_temperature', run_data.get('optimal_temp'))} C
     H2 Yield: {run_data.get('hydrogen_yield', run_data.get('optimal_h2_yield'))} m3

@@ -305,7 +305,9 @@ def result_details(run_id):
     
     if (not existing_insight or 'Error generating' in existing_insight) and ai_insights.is_ai_enabled():
         results_data = summary_data.get('results', {})
-        summary_data['ai_insight'] = ai_insights.generate_executive_summary({**results_data})
+        parameters_data = run_info.get('parameters', {})
+        merged_data = {**results_data, **parameters_data}
+        summary_data['ai_insight'] = ai_insights.generate_executive_summary(merged_data)
         # Save it back to summary.json
         summary_file = Path(run_info['run_dir']) / 'summary.json'
         with open(summary_file, 'w') as f:
@@ -329,7 +331,9 @@ def api_chat():
         return jsonify({'error': 'Run not found'}), 404
         
     results_data = run_info.get('summary', {}).get('results', {})
-    response_text = ai_insights.chat_with_run({**results_data}, chat_history, new_message)
+    parameters_data = run_info.get('parameters', {})
+    merged_data = {**results_data, **parameters_data}
+    response_text = ai_insights.chat_with_run(merged_data, chat_history, new_message)
     
     return jsonify({'response': response_text}), 200
 

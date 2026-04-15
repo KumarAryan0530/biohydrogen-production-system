@@ -1,0 +1,645 @@
+
+============================================================
+RUN: Fast Default Run2
+============================================================
+  Baseline: pH=5.5, T=35°C, 10 days
+  Sweep: pH [5.0-8.0], T [25-40°C]
+  MPC: horizon=5d, interval=5d, total=10d
+
+[1/6] Running baseline simulation...
+
+============================================================
+STAGE 1: Baseline Biohydrogen Simulation
+============================================================
+  Model: ADM1 with methanogenesis DISABLED
+  Conditions: pH=5.5, T=35°C, 30 days
+      Simulating step 0/60 (t=0.00d), elapsed: 0.0s
+      Simulating step 6/60 (t=3.00d), elapsed: 0.9s
+      Simulating step 12/60 (t=6.00d), elapsed: 1.5s
+      Simulating step 18/60 (t=9.00d), elapsed: 1.6s
+      Simulating step 24/60 (t=12.00d), elapsed: 1.7s
+      Simulating step 30/60 (t=15.00d), elapsed: 1.8s
+      Simulating step 36/60 (t=18.00d), elapsed: 1.9s
+      Simulating step 42/60 (t=21.00d), elapsed: 1.9s
+      Simulating step 48/60 (t=24.00d), elapsed: 2.0s
+      Simulating step 54/60 (t=27.00d), elapsed: 2.0s
+
+  Results:
+    Cumulative H2 yield:  333.01 m³
+    H2 mass:              26.20 kg
+    Average H2 rate:      10.92 m³/day
+    Final S_h2 (liquid):  0.000621 kgCOD/m³
+    Final S_gas_h2 (gas): 0.000000 kgCOD/m³
+
+[2/6] Running parameter sweep...
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s      Simulating step 0/10 (t=0.00d), elapsed: 0.0s      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+
+
+
+      Simulating step 1/10 (t=1.00d), elapsed: 1.4s
+      Simulating step 1/10 (t=1.00d), elapsed: 1.5s      Simulating step 1/10 (t=1.00d), elapsed: 1.5s
+
+      Simulating step 1/10 (t=1.00d), elapsed: 1.5s      Simulating step 1/10 (t=1.00d), elapsed: 1.5s      Simulating step 1/10 (t=1.00d), elapsed: 1.6s      Simulating step 1/10 (t=1.00d), elapsed: 1.5s      Simulating step 1/10 (t=1.00d), elapsed: 1.6s
+      Simulating step 1/10 (t=1.00d), elapsed: 1.5s
+
+
+
+      Simulating step 1/10 (t=1.00d), elapsed: 1.6s      Simulating step 1/10 (t=1.00d), elapsed: 1.5s      Simulating step 1/10 (t=1.00d), elapsed: 1.6s
+
+
+
+      Simulating step 1/10 (t=1.00d), elapsed: 2.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 1.9s
+      Simulating step 1/10 (t=1.00d), elapsed: 2.1s      Simulating step 1/10 (t=1.00d), elapsed: 2.0s
+
+      Simulating step 2/10 (t=2.00d), elapsed: 2.7s
+      Simulating step 2/10 (t=2.00d), elapsed: 2.8s
+      Simulating step 2/10 (t=2.00d), elapsed: 2.9s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.0s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.2s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.3s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.3s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.2s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.4s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.2s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.3s
+      Simulating step 2/10 (t=2.00d), elapsed: 3.6s
+      Simulating step 3/10 (t=3.00d), elapsed: 3.7s      Simulating step 3/10 (t=3.00d), elapsed: 3.7s
+
+      Simulating step 3/10 (t=3.00d), elapsed: 3.8s
+      Simulating step 3/10 (t=3.00d), elapsed: 3.9s
+      Simulating step 3/10 (t=3.00d), elapsed: 4.0s      Simulating step 3/10 (t=3.00d), elapsed: 3.9s
+
+      Simulating step 3/10 (t=3.00d), elapsed: 4.0s      Simulating step 3/10 (t=3.00d), elapsed: 4.1s
+
+      Simulating step 2/10 (t=2.00d), elapsed: 4.3s
+      Simulating step 3/10 (t=3.00d), elapsed: 4.3s
+      Simulating step 3/10 (t=3.00d), elapsed: 4.4s
+      Simulating step 4/10 (t=4.00d), elapsed: 4.3s
+      Simulating step 3/10 (t=3.00d), elapsed: 4.4s      Simulating step 4/10 (t=4.00d), elapsed: 4.4s      Simulating step 4/10 (t=4.00d), elapsed: 4.3s      Simulating step 3/10 (t=3.00d), elapsed: 4.5s
+
+
+
+      Simulating step 4/10 (t=4.00d), elapsed: 4.5s      Simulating step 3/10 (t=3.00d), elapsed: 4.6s      Simulating step 4/10 (t=4.00d), elapsed: 4.4s      Simulating step 4/10 (t=4.00d), elapsed: 4.5s
+
+      Simulating step 4/10 (t=4.00d), elapsed: 4.6s
+
+
+      Simulating step 4/10 (t=4.00d), elapsed: 4.6s      Simulating step 3/10 (t=3.00d), elapsed: 4.7s
+      Simulating step 3/10 (t=3.00d), elapsed: 4.9s
+
+      Simulating step 5/10 (t=5.00d), elapsed: 4.9s
+      Simulating step 5/10 (t=5.00d), elapsed: 4.9s
+      Simulating step 5/10 (t=5.00d), elapsed: 5.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 5.2s      Simulating step 5/10 (t=5.00d), elapsed: 5.2s
+
+      Simulating step 5/10 (t=5.00d), elapsed: 5.4s
+      Simulating step 5/10 (t=5.00d), elapsed: 5.4s      Simulating step 5/10 (t=5.00d), elapsed: 5.5s      Simulating step 6/10 (t=6.00d), elapsed: 5.5s
+      Simulating step 6/10 (t=6.00d), elapsed: 5.5s
+
+
+      Simulating step 6/10 (t=6.00d), elapsed: 6.0s      Simulating step 6/10 (t=6.00d), elapsed: 6.0s
+
+      Simulating step 3/10 (t=3.00d), elapsed: 6.2s
+      Simulating step 6/10 (t=6.00d), elapsed: 6.1s
+      Simulating step 6/10 (t=6.00d), elapsed: 6.3s      Simulating step 6/10 (t=6.00d), elapsed: 6.2s
+
+      Simulating step 7/10 (t=7.00d), elapsed: 6.3s      Simulating step 7/10 (t=7.00d), elapsed: 6.3s      Simulating step 6/10 (t=6.00d), elapsed: 6.3s
+
+
+      Simulating step 4/10 (t=4.00d), elapsed: 6.7s      Simulating step 4/10 (t=4.00d), elapsed: 6.6s
+
+      Simulating step 7/10 (t=7.00d), elapsed: 6.6s
+      Simulating step 7/10 (t=7.00d), elapsed: 6.6s
+      Simulating step 4/10 (t=4.00d), elapsed: 6.7s
+      Simulating step 7/10 (t=7.00d), elapsed: 6.7s      Simulating step 7/10 (t=7.00d), elapsed: 6.7s
+
+      Simulating step 8/10 (t=8.00d), elapsed: 6.8s
+      Simulating step 7/10 (t=7.00d), elapsed: 7.0s      Simulating step 7/10 (t=7.00d), elapsed: 6.9s      Simulating step 4/10 (t=4.00d), elapsed: 7.1s
+
+
+      Simulating step 8/10 (t=8.00d), elapsed: 7.0s
+      Simulating step 8/10 (t=8.00d), elapsed: 7.1s
+      Simulating step 8/10 (t=8.00d), elapsed: 7.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 7.4s      Simulating step 8/10 (t=8.00d), elapsed: 7.2s
+
+      Simulating step 8/10 (t=8.00d), elapsed: 7.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 7.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 7.5s
+      Simulating step 8/10 (t=8.00d), elapsed: 7.5s      Simulating step 9/10 (t=9.00d), elapsed: 7.6s
+      Simulating step 8/10 (t=8.00d), elapsed: 7.7s
+      Simulating step 9/10 (t=9.00d), elapsed: 7.6s
+
+      Simulating step 4/10 (t=4.00d), elapsed: 7.9s      Simulating step 9/10 (t=9.00d), elapsed: 7.7s      Simulating step 9/10 (t=9.00d), elapsed: 7.7s
+
+
+      Simulating step 5/10 (t=5.00d), elapsed: 7.8s
+      Simulating step 9/10 (t=9.00d), elapsed: 7.9s
+      Simulating step 5/10 (t=5.00d), elapsed: 8.0s
+      Simulating step 9/10 (t=9.00d), elapsed: 8.0s
+      Simulating step 9/10 (t=9.00d), elapsed: 8.1s
+      Simulating step 5/10 (t=5.00d), elapsed: 8.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 8.5s
+      Simulating step 5/10 (t=5.00d), elapsed: 8.8s      Simulating step 5/10 (t=5.00d), elapsed: 8.7s
+
+      Simulating step 5/10 (t=5.00d), elapsed: 8.8s
+      Simulating step 5/10 (t=5.00d), elapsed: 9.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 9.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 9.6s
+      Simulating step 6/10 (t=6.00d), elapsed: 9.7s
+      Simulating step 6/10 (t=6.00d), elapsed: 10.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 10.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 10.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 10.4s
+      Simulating step 6/10 (t=6.00d), elapsed: 10.5s
+      Simulating step 7/10 (t=7.00d), elapsed: 10.5s
+      Simulating step 6/10 (t=6.00d), elapsed: 10.8s
+      Simulating step 6/10 (t=6.00d), elapsed: 11.1s
+      Simulating step 7/10 (t=7.00d), elapsed: 11.2s
+      Simulating step 7/10 (t=7.00d), elapsed: 11.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 11.3s      Simulating step 7/10 (t=7.00d), elapsed: 11.4s
+
+      Simulating step 8/10 (t=8.00d), elapsed: 11.8s
+      Simulating step 8/10 (t=8.00d), elapsed: 11.8s      Simulating step 7/10 (t=7.00d), elapsed: 11.9s
+
+      Simulating step 9/10 (t=9.00d), elapsed: 11.9s
+      Simulating step 7/10 (t=7.00d), elapsed: 12.1s
+      Simulating step 9/10 (t=9.00d), elapsed: 12.5s
+      Simulating step 8/10 (t=8.00d), elapsed: 13.1s
+      Simulating step 9/10 (t=9.00d), elapsed: 13.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 13.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 13.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 13.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 13.5s
+      Simulating step 8/10 (t=8.00d), elapsed: 13.6s
+      Simulating step 8/10 (t=8.00d), elapsed: 13.6s
+      Simulating step 9/10 (t=9.00d), elapsed: 13.9s
+      Simulating step 9/10 (t=9.00d), elapsed: 13.9s
+      Simulating step 9/10 (t=9.00d), elapsed: 14.1s
+      Simulating step 9/10 (t=9.00d), elapsed: 14.2s
+  Best: pH=8.0, T=40°C
+
+[3/6] Running optimization...
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.4s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.3s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.4s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.3s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.4s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.4s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.4s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.4s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.5s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.5s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.4s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.5s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.6s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.7s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.9s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.9s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.4s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.5s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.6s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.4s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.5s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.6s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.7s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.9s
+      Simulating step 9/10 (t=9.00d), elapsed: 1.0s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.4s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.5s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.3s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.4s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.5s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.6s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.8s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.9s
+      Simulating step 8/10 (t=8.00d), elapsed: 1.1s
+      Simulating step 9/10 (t=9.00d), elapsed: 1.2s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.2s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.3s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.4s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.4s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.3s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.4s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.4s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.3s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.4s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.2s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.4s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.4s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.4s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.4s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.2s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.3s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.4s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.4s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.3s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.3s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.3s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.3s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.3s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.3s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.2s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.2s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.2s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.3s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.3s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.3s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.2s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.3s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.3s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.4s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.2s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.3s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.4s
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.3s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.4s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+  Optimal: pH=8.00, T=40.0°C
+
+[4/6] Running MPC control...
+      Simulating step 0/10 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/10 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/10 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/10 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/10 (t=4.00d), elapsed: 0.3s
+      Simulating step 5/10 (t=5.00d), elapsed: 0.4s
+      Simulating step 6/10 (t=6.00d), elapsed: 0.4s
+      Simulating step 7/10 (t=7.00d), elapsed: 0.4s
+      Simulating step 8/10 (t=8.00d), elapsed: 0.5s
+      Simulating step 9/10 (t=9.00d), elapsed: 0.5s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.3s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.3s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.3s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.3s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.3s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.3s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.4s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.3s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.4s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.3s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.3s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.4s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.3s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.3s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.2s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.3s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.2s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.2s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.1s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.2s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.1s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.2s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.2s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.0s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.1s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.2s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.1s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.1s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.1s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.0s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.2s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.2s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.0s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.1s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.1s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.0s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.1s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.1s
+      Simulating step 0/5 (t=0.00d), elapsed: 0.0s
+      Simulating step 1/5 (t=1.00d), elapsed: 0.0s
+      Simulating step 2/5 (t=2.00d), elapsed: 0.1s
+      Simulating step 3/5 (t=3.00d), elapsed: 0.1s
+      Simulating step 4/5 (t=4.00d), elapsed: 0.1s
+  Improvement: +114.8%
+
+[5/6] Running cost analysis...
+  LCOH: $21.48/kg H2
+
+[6/6] Generating plots and summary...
+
+============================================================
+STAGE 6: Save Results & Generate Plots
+============================================================
+  Saved: results/summary.csv
+  Saved: results/sweep_results.csv
+  Saved: results/h2_yield_heatmap.png
+  Saved: results/baseline_h2_production.png
+  Saved: results/cost_breakdown.png

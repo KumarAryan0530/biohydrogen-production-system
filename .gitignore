@@ -14,8 +14,8 @@ __pycache__/
 # Output / logs
 *.log
 main_output.txt
-results/
-results_runs/
+# results/ (We need to keep this for the initial 0-0-0 fix!)
+# results_runs/
 decompiled.txt
 
 # OS generated files

@@ -1,0 +1,20 @@
+{
+  "run_name": "Default Run",
+  "baseline_ph": 5,
+  "baseline_temp": 32,
+  "baseline_days": 9,
+  "sweep_ph_min": 5,
+  "sweep_ph_max": 8,
+  "sweep_ph_step": 0.5,
+  "sweep_temp_min": 25,
+  "sweep_temp_max": 40,
+  "sweep_temp_step": 5,
+  "sweep_days": 9,
+  "mpc_control_horizon": 5,
+  "mpc_control_interval": 5,
+  "mpc_total_time": 30,
+  "plant_capital_cost": 5000000,
+  "plant_life": 20,
+  "discount_rate": 0.08,
+  "capacity_factor": 0.9
+}

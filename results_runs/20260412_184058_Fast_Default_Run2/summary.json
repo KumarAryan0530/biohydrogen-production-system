@@ -1,0 +1,38 @@
+{
+  "run_id": "20260412_184058_Fast_Default_Run2",
+  "run_name": "Fast Default Run2",
+  "timestamp": "2026-04-12T18:41:40.374884",
+  "parameters": {
+    "run_name": "Fast Default Run2",
+    "baseline_ph": 5.5,
+    "baseline_temp": 35,
+    "baseline_days": 10,
+    "sweep_ph_min": 5,
+    "sweep_ph_max": 8,
+    "sweep_ph_step": 1,
+    "sweep_temp_min": 25,
+    "sweep_temp_max": 40,
+    "sweep_temp_step": 5,
+    "sweep_days": 10,
+    "mpc_control_horizon": 5,
+    "mpc_control_interval": 5,
+    "mpc_total_time": 10,
+    "plant_capital_cost": 5000000,
+    "plant_life": 20,
+    "discount_rate": 0.08,
+    "capacity_factor": 0.9
+  },
+  "results": {
+    "run_id": "20260412_184058_Fast_Default_Run2",
+    "run_name": "Fast Default Run2",
+    "timestamp": "2026-04-12T18:41:40.370090",
+    "optimal_ph": 8.0,
+    "optimal_temp": 40.0,
+    "optimal_h2_yield": 6009.021920359311,
+    "mpc_improvement": 114.75017229987743,
+    "lcoh": 21.47950716898151,
+    "annual_h2_kg": 32824.70069012256,
+    "total_capital": 5000000.0
+  },
+  "ai_insight": "The simulation results indicate a robust 114.75% improvement in hydrogen yield via Model Predictive Control, achieving over 6000 cubic meters in 30 days. While the optimal pH of 8.0 and temperature of 40\u00b0C are biologically plausible for thermophilic dark fermentation, the Levelized Cost of Hydrogen remains exceptionally high at over $21/kg, signifying a major economic hurdle. The immediate next step should focus on comprehensive techno-economic analysis to aggressively identify and optimize cost drivers, particularly feedstock sourcing and process energy efficiency, to bring LCOH to a commercially viable range."
+}

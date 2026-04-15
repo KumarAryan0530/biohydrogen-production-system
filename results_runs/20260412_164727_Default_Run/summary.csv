@@ -1,0 +1,13 @@
+Parameter,Value
+Best pH (grid),5.0
+Best Temperature (grid),30.0
+Best H2 yield (grid),654501.4118390903
+Optimal pH,5.004428863525391
+Optimal Temperature,30.005905151367188
+Optimal H2 yield,1037432.726011783
+Controlled H2 yield,2659241.5430430304
+Uncontrolled H2 yield,1037432.726011783
+MPC Improvement,156.32905887459225
+LCOH ($/kg H2),2.747753944247852
+Annual H2 (kg/yr),2329090.592955569
+Total Capital ($),5000000.0

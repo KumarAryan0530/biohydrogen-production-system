@@ -1,0 +1,38 @@
+{
+  "run_id": "20260412_171418_Default_Run",
+  "run_name": "Default Run",
+  "timestamp": "2026-04-12T17:15:08.423779",
+  "parameters": {
+    "run_name": "Default Run",
+    "baseline_ph": 5,
+    "baseline_temp": 32,
+    "baseline_days": 9,
+    "sweep_ph_min": 5,
+    "sweep_ph_max": 8,
+    "sweep_ph_step": 0.5,
+    "sweep_temp_min": 25,
+    "sweep_temp_max": 40,
+    "sweep_temp_step": 5,
+    "sweep_days": 9,
+    "mpc_control_horizon": 5,
+    "mpc_control_interval": 5,
+    "mpc_total_time": 30,
+    "plant_capital_cost": 5000000,
+    "plant_life": 20,
+    "discount_rate": 0.08,
+    "capacity_factor": 0.9
+  },
+  "results": {
+    "run_id": "20260412_171418_Default_Run",
+    "run_name": "Default Run",
+    "timestamp": "2026-04-12T17:15:08.413311",
+    "optimal_ph": 8.0,
+    "optimal_temp": 40.0,
+    "optimal_h2_yield": 5405.218597106148,
+    "mpc_improvement": 114.84093919670335,
+    "lcoh": 21.506350976948763,
+    "annual_h2_kg": 32778.38916359426,
+    "total_capital": 5000000.0
+  },
+  "ai_insight": "The pyADM1 simulation demonstrated robust performance, yielding approximately 5405 cubic meters of hydrogen over 30 days with a remarkable 114% improvement attributed to Model Predictive Control. While biologically realistic mesophilic conditions at 40\u00b0C were maintained, the optimal pH of 8.0 is at the higher end for typical dark fermentation, and the Levelized Cost of Hydrogen at over $21.50 per kilogram is currently prohibitive for commercial deployment. A critical next step is to conduct a detailed technoeconomic analysis to pinpoint and address the primary cost drivers, alongside experimental validation of the high pH operating conditions."
+}

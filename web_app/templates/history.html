@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block title %}Simulation History{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+        <h1 style="color: var(--text-dark); margin-bottom: 1.5rem; font-size: 2rem; font-weight: 800;">📚 Simulation History & Results</h1>
+    <!-- Intro Card -->
+    <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-title">🔍 View All Past Simulations</div>
+        <p style="color: var(--text-muted); line-height: 1.8;">
+            Below is a complete list of all simulation runs you've performed. Click on any run to view:
+        </p>
+        <ul style="list-style-position: inside; color: var(--text-muted); line-height: 1.8;">
+            <li>📊 Detailed metrics and optimization results</li>
+            <li>📈 Charts and visualizations (heatmaps, time series, cost breakdown)</li>
+            <li>📋 Parameter values used for that run</li>
+            <li>📁 Raw CSV data for export</li>
+        </ul>
+    </div>
+
+    {% if runs %}
+    <!-- Runs Table -->
+    <div class="card">
+        <div class="card-title">📋 All Simulation Runs</div>
+        <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.95rem;">
+            Total runs: <strong>{{ runs|length }}</strong> | Click any row to view full details
+        </p>
+        
+        <div style="overflow-x: auto;">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40px; text-align: center;"><input type="checkbox" id="selectAll" onclick="toggleAll(this)" style="cursor: pointer;"></th>
+                        <th>Run Name</th>
+                        <th>Date & Time</th>
+                        <th>Optimal pH</th>
+                        <th>Optimal Temp (°C)</th>
+                        <th>H₂ Yield (m³)</th>
+                        <th>MPC Improvement</th>
+                        <th>LCOH ($/kg)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for run in runs %}
+                    <tr style="transition: background 0.3s ease;" 
+                        onmouseover="this.style.background='#fef3c7'" 
+                        onmouseout="this.style.background=''">
+                        <td style="text-align: center;">
+                            <input type="checkbox" class="compare-cb" value="{{ run.run_id }}" data-name="{{ run.run_name }}" style="cursor: pointer;">
+                        </td>
+                        <td>
+                            <a href="/results/{{ run.run_id }}" style="text-decoration: none; color: var(--primary); font-weight: 700; cursor: pointer;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                                📌 {{ run.run_name }}
+                            </a>
+                        </td>
+                        <td style="font-size: 0.9rem; color: var(--text-muted);">
+                            {{ run.timestamp[:10] }}<br>{{ run.timestamp[11:19] }}
+                        </td>
+                        <td>
+                            <strong style="color: var(--text-dark);">{{ run.optimal_ph }}</strong>
+                        </td>
+                        <td>
+                            <strong style="color: var(--text-dark);">{{ run.optimal_temp }}</strong>
+                        </td>
+                        <td>
+                            <strong style="color: var(--primary);">{{ run.h2_yield }}</strong>
+                        </td>
+                        <td>
+                            <span class="badge badge-success" style="background: rgba(16, 185, 129, 0.2); color: var(--success); font-weight: 700;">
+                                {{ run.mpc_improvement }}%
+                            </span>
+                        </td>
+                        <td>
+                            <strong style="color: var(--primary);">{{ run.lcoh }}</strong>
+                        </td>
+                          <td style="text-align: center;">
+                            <div style="display: flex; gap: 0.5rem; align-items: center; justify-content: center;">
+                                <button onclick="viewRun('{{ run.run_id }}')" class="btn btn-primary" style="padding: 0.6rem 1rem; font-size: 0.9rem; min-width: 70px; box-shadow: 0 2px 6px rgba(217, 119, 6, 0.2);">
+                                    📋 View
+                                </button>
+                                <button onclick="deleteRun('{{ run.run_id }}', '{{ run.run_name }}')" class="btn btn-secondary" style="padding: 0.6rem 1rem; font-size: 0.9rem; min-width: 70px; background: #ff6b6b; color: white; border: none; box-shadow: 0 2px 6px rgba(255, 107, 107, 0.2);">
+                                    🗑️ Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="card">
+        <div class="card-title">📊 Quick Statistics</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+            <div style="padding: 1.5rem; background: linear-gradient(135deg, var(--primary) 0%, #b45309 100%); border-radius: 8px; color: white; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);">
+                <div style="font-size: 0.9rem; opacity: 0.9; font-weight: 600;">Total Runs</div>
+                <div style="font-size: 2.5rem; font-weight: 800; margin-top: 0.5rem;">{{ runs|length }}</div>
+            </div>
+            <div style="padding: 1.5rem; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: 8px; color: white; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);">
+                <div style="font-size: 0.9rem; opacity: 0.9; font-weight: 600;">Best pH</div>
+                <div style="font-size: 2.5rem; font-weight: 800; margin-top: 0.5rem;">
+                    {% set valid_runs = runs | rejectattr('raw_yield', 'equalto', 0) | list %}
+                    {% if valid_runs %}
+                        {% set best_run = valid_runs | sort(attribute='raw_lcoh') | first %}
+                        {{ "%.2f"|format(best_run.raw_ph) if best_run.raw_ph else '0.0' }}
+                    {% else %}
+                        0.0
+                    {% endif %}
+                </div>
+            </div>
+            <div style="padding: 1.5rem; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 8px; color: white; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);">
+                <div style="font-size: 0.9rem; opacity: 0.9; font-weight: 600;">Avg MPC Improvement</div>
+                <div style="font-size: 2.5rem; font-weight: 800; margin-top: 0.5rem;">
+                    {% set valid_mpc = runs|map(attribute='raw_mpc')|reject('equalto', 0)|list %}
+                    {% if valid_mpc %}
+                        {{ "%.1f"|format(valid_mpc|sum / valid_mpc|length) }}%
+                    {% else %}
+                        0.0%
+                    {% endif %}
+                </div>
+            </div>
+            <div style="padding: 1.5rem; background: linear-gradient(135deg, var(--success) 0%, #059669 100%); border-radius: 8px; color: white; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);">
+                <div style="font-size: 0.9rem; opacity: 0.9; font-weight: 600;">Best LCOH</div>
+                <div style="font-size: 2.5rem; font-weight: 800; margin-top: 0.5rem;">
+                    {% if valid_runs %}
+                        {% set best_run_lcoh = valid_runs | sort(attribute='raw_lcoh') | first %}
+                        ${{ "%.2f"|format(best_run_lcoh.raw_lcoh) }}
+                    {% else %}
+                        $0.00
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- No Runs Message -->
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <div style="font-size: 2rem; margin-bottom: 1rem;">📭</div>
+            <h2 style="color: var(--primary); margin-bottom: 1rem; font-weight: 800;">No Simulation Runs Yet</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+            You haven't run any simulations yet. Start by configuring parameters and submitting your first run.
+        </p>
+        <a href="/configure" class="btn btn-primary" style="font-size: 1.1rem;">
+            🚀 Create First Simulation
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Comparison Feature -->
+    <div class="card" style="margin-top: 2rem; background: var(--bg-white); border: 2px solid var(--primary); box-shadow: 0 4px 12px rgba(217, 119, 6, 0.15);">
+        <div class="card-title" style="display: flex; justify-content: space-between; align-items: center; border-bottom: none; padding-bottom: 0;">
+            <div style="color: var(--primary);">🔄 Compare Runs</div>
+            <button onclick="compareSelected()" class="btn btn-primary" id="compareBtn" style="padding: 0.6rem 1.2rem; font-size: 0.95rem; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);">
+                📊 Compare Selected
+            </button>
+        </div>
+        <div style="border-bottom: 2px solid var(--primary-light); margin: 1rem 0;"></div>
+        <p style="color: var(--text-muted); margin-bottom: 0;" id="compareHelperText">
+            Select 2 or more runs from the table above and click "Compare Selected" to view their metrics side-by-side.
+        </p>
+        
+        <!-- Container for comparison results -->
+        <div id="comparisonContainer" style="display: none; overflow-x: auto; margin-top: 1.5rem; border-radius: 8px; border: 1px solid var(--border);">
+            <table class="results-table" id="comparisonTable" style="margin-top: 0; min-width: 100%;">
+                <thead id="comparisonHead"></thead>
+                <tbody id="comparisonBody"></tbody>
+            </table>
+        </div>
+        
+        <!-- AI Comparison Summary Block -->
+        <div id="aiSummaryBlock" style="display: none; margin-top: 1.5rem; background: var(--bg-cream); border-left: 4px solid var(--primary); padding: 1rem; border-radius: 0 8px 8px 0;">
+            <h4 style="margin-top: 0; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem;">
+                ✨ AI Comparison Summary
+            </h4>
+            <p id="aiSummaryContent" style="color: var(--text); margin-bottom: 0; white-space: pre-wrap; line-height: 1.5;"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewRun(runId) {
+    window.location.href = `/results/${runId}`;
+}
+
+function deleteRun(runId, runName) {
+    if (confirm(`Are you sure you want to delete the run "${runName}"? This action cannot be undone.`)) {
+        fetch(`/api/delete-run/${runId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert('Run deleted successfully.');
+                location.reload();
+            } else {
+                alert(`Error: ${data.message}`);
+            }
+        })
+        .catch(error => {
+            alert(`Error deleting run: ${error.message}`);
+        });
+    }
+}
+
+// Toggle all checkboxes
+document.getElementById('selectAll').addEventListener('change', function(e) {
+    document.querySelectorAll('.compare-cb').forEach(cb => {
+        cb.checked = e.target.checked;
+    });
+});
+
+function compareSelected() {
+    const selectedIds = Array.from(document.querySelectorAll('.compare-cb:checked')).map(cb => cb.value);
+    if (selectedIds.length < 2) {
+        alert('Please select at least 2 runs to compare.');
+        return;
+    }
+
+    const btn = document.getElementById('compareBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Comparing...';
+    btn.disabled = true;
+
+    fetch('/api/compare-runs', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ run_ids: selectedIds })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            renderComparisonTable(data.comparison);
+            if (data.ai_summary) {
+                document.getElementById('aiSummaryBlock').style.display = 'block';
+                document.getElementById('aiSummaryContent').textContent = data.ai_summary;
+            } else {
+                document.getElementById('aiSummaryBlock').style.display = 'none';
+            }
+        } else {
+            alert('Error comparing runs: ' + data.message);
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('A network error occurred.');
+    })
+    .finally(() => {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+}
+
+function renderComparisonTable(runs) {
+    if (!runs || runs.length === 0) return;
+    
+    document.getElementById('compareHelperText').style.display = 'none';
+    document.getElementById('comparisonContainer').style.display = 'block';
+    
+    const thead = document.getElementById('comparisonHead');
+    const tbody = document.getElementById('comparisonBody');
+    thead.innerHTML = '';
+    tbody.innerHTML = '';
+
+    const keys = [
+        'run_name', 'timestamp', 
+        'optimal_ph', 'optimal_temp', 'h2_yield', 'mpc_improvement', 'lcoh'
+    ];
+    
+    const labels = {
+        'run_name': 'Run Name',
+        'timestamp': 'Timestamp',
+        'optimal_ph': 'Optimal pH',
+        'optimal_temp': 'Optimal Temp (°C)',
+        'h2_yield': 'H₂ Yield (m³)',
+        'mpc_improvement': 'MPC Improvement (%)',
+        'lcoh': 'LCOH ($/kg)'
+    };
+
+    let trHead = document.createElement('tr');
+    trHead.innerHTML = `<th style="width: 200px; background: var(--primary-light); color: var(--text-dark);">Metric</th>`;
+    runs.forEach(run => {
+        let name = run.run_name || run.run_id;
+        trHead.innerHTML += `<th style="text-align: center; background: var(--primary); color: white;">${name}</th>`;
+    });
+    thead.appendChild(trHead);
+
+    keys.forEach(key => {
+        let tr = document.createElement('tr');
+        tr.innerHTML = `<td style="font-weight: 500; background: var(--bg-cream); color: var(--text-dark);">${labels[key] || key}</td>`;
+        
+        runs.forEach(run => {
+            let val = '-';
+            if (run[key] !== undefined && run[key] !== null) {
+               if (typeof run[key] === 'number') {
+                   val = run[key].toFixed(3);
+               } else if (typeof run[key] === 'string' && run[key].includes('T') && key === 'timestamp') {
+                   val = run[key].replace('T', ' ').substring(0, 19);
+               } else {
+                   val = run[key];
+               }
+            } else if (run.metrics && run.metrics[key] !== undefined && run.metrics[key] !== null) {
+                let pval = run.metrics[key];
+                val = typeof pval === 'number' ? pval.toFixed(3) : pval;
+            }
+            tr.innerHTML += `<td style="text-align: center;">${val}</td>`;
+        });
+        tbody.appendChild(tr);
+    });
+}
+</script>
+{% endblock %}
+

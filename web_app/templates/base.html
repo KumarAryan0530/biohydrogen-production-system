@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Biohydrogen Production System{% endblock %} - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.18.0/plotly.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/dashboard" class="navbar-brand">Biohydrogen Production System</a>
+            <ul class="nav-links">
+                <li><a href="/dashboard" class="{% if request.endpoint == 'index' %}active{% endif %}">Dashboard</a></li>
+                <li><a href="/configure" class="{% if request.endpoint == 'configure' %}active{% endif %}">Configure</a></li>
+                <li><a href="/history" class="{% if request.endpoint == 'history' %}active{% endif %}">History</a></li>
+                <li><a href="/sweep" class="{% if request.endpoint == 'sweep' %}active{% endif %}">Sweep</a></li>
+                <li><a href="/cost" class="{% if request.endpoint == 'cost' %}active{% endif %}">Cost</a></li>
+                <li><a href="/detailed" class="{% if request.endpoint == 'detailed' %}active{% endif %}">Details</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p><strong>Biohydrogen Production Simulation & Optimization System</strong></p>
+        <p>Made with love by Riti Kumari, UID: 22BBE10211, Chandigarh University, Mohali, Punjab</p>
+        <p style="font-size: 0.9rem; margin-top: 1rem;">© 2026 | Systems Biology Approach to Optimize Biohydrogen Production from Organic Waste</p>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

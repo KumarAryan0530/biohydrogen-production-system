@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+
+{% block title %}Detailed Run Results - {{ run_info.summary.get('run_name', 'Run') }}{% endblock %}
+
+{% block content %}
+<div class="mb-3" id="mainContent" style="margin-right: 420px; transition: margin-right 0.3s ease;">
+    <!-- Back Button -->
+    <a href="/history" style="display: inline-block; color: var(--primary); text-decoration: none; margin-bottom: 1rem; font-weight: 700;">
+        ← Back to History
+    </a>
+
+    <h1 style="color: var(--text-dark); margin-bottom: 0.5rem; font-size: 2rem; font-weight: 800;">
+        📊 {{ run_info.summary.get('run_name', 'Run') }}
+    </h1>
+    <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+        Run ID: <code style="background: var(--primary-light); padding: 0.25rem 0.5rem; border-radius: 4px; color: var(--primary);">{{ run_info.run_id }}</code>
+        | Created: {{ run_info.summary.get('timestamp', '')[:10] }} {{ run_info.summary.get('timestamp', '')[11:19] }}
+    </p>
+
+    <!-- Key Metrics Summary -->
+    <div class="metrics-grid" style="margin-bottom: 2rem;">
+        <div class="metric-card">
+            <div class="metric-label">🧬 Optimal pH</div>
+            <div class="metric-value">{{ "%.3f"|format(run_info.summary.get('results', {}).get('optimal_ph', 0)) }}</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">🌡️ Optimal Temperature</div>
+            <div class="metric-value">{{ "%.1f"|format(run_info.summary.get('results', {}).get('optimal_temp', 0)) }}°C</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">💨 H₂ Yield</div>
+            <div class="metric-value">{{ "{:,.0f}".format(run_info.summary.get('results', {}).get('optimal_h2_yield', 0)) }}</div>
+            <div class="metric-unit">m³ (30 days)</div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-label">⚡ MPC Improvement</div>
+            <div class="metric-value">+{{ "%.1f"|format(run_info.summary.get('results', {}).get('mpc_improvement', 0)) }}%</div>
+        </div>
+    </div>
+
+
+    <!-- Charts Section -->
+    {% if images %}
+    <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+        {% if images.get('h2_yield_heatmap.png') %}
+        <div class="card">
+            <div class="card-title">🔥 Parameter Optimization Landscape</div>
+            <div class="image-container">
+                <img src="data:image/png;base64,{{ images['h2_yield_heatmap.png'] }}" alt="H2 Yield Heatmap">
+            </div>
+        </div>
+        {% endif %}
+
+        {% if images.get('baseline_h2_production.png') %}
+        <div class="card">
+            <div class="card-title">📈 Baseline H₂ Production Time Series</div>
+            <div class="image-container">
+                <img src="data:image/png;base64,{{ images['baseline_h2_production.png'] }}" alt="Baseline H2 Production">
+            </div>
+        </div>
+        {% endif %}
+
+        {% if images.get('cost_breakdown.png') %}
+        <div class="card">
+            <div class="card-title">💰 Cost Breakdown Analysis</div>
+            <div class="image-container">
+                <img src="data:image/png;base64,{{ images['cost_breakdown.png'] }}" alt="Cost Breakdown">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Parameters Used -->
+    <div class="card">
+        <div class="card-title">⚙️ Simulation Parameters Used</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <!-- Baseline -->
+            <div>
+                <h3 style="font-size: 1rem; font-weight: 600; color: #667eea; margin-bottom: 1rem;">Baseline Simulation</h3>
+                <table class="results-table" style="font-size: 0.9rem;">
+                    <tr>
+                        <td><strong>pH</strong></td>
+                        <td>{{ "%.2f"|format(run_info.parameters.get('baseline_ph', 0)) }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Temperature</strong></td>
+                        <td>{{ "%.1f"|format(run_info.parameters.get('baseline_temp', 0)) }}°C</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Duration</strong></td>
+                        <td>{{ "%.1f"|format(run_info.parameters.get('baseline_days', 0)) }} days</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Parameter Sweep -->
+            <div>
+                <h3 style="font-size: 1rem; font-weight: 600; color: #667eea; margin-bottom: 1rem;">Parameter Sweep Grid</h3>
+                <table class="results-table" style="font-size: 0.9rem;">
+                    <tr>
+                        <td><strong>pH Range</strong></td>
+                        <td>{{ "%.1f"|format(run_info.parameters.get('sweep_ph_min', 0)) }} – {{ "%.1f"|format(run_info.parameters.get('sweep_ph_max', 0)) }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>pH Step</strong></td>
+                        <td>{{ "%.1f"|format(run_info.parameters.get('sweep_ph_step', 0)) }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Temp Range</strong></td>
+                        <td>{{ "%.0f"|format(run_info.parameters.get('sweep_temp_min', 0)) }} – {{ "%.0f"|format(run_info.parameters.get('sweep_temp_max', 0)) }}°C</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Temp Step</strong></td>
+                        <td>{{ "%.0f"|format(run_info.parameters.get('sweep_temp_step', 0)) }}°C</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- MPC Control -->
+            <div>
+                <h3 style="font-size: 1rem; font-weight: 600; color: #667eea; margin-bottom: 1rem;">MPC Control Settings</h3>
+                <table class="results-table" style="font-size: 0.9rem;">
+                    <tr>
+                        <td><strong>Control Horizon</strong></td>
+                        <td>{{ "%.1f"|format(run_info.parameters.get('mpc_control_horizon', 0)) }} days</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Control Interval</strong></td>
+                        <td>{{ "%.1f"|format(run_info.parameters.get('mpc_control_interval', 0)) }} days</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Simulation Time</strong></td>
+                        <td>{{ "%.1f"|format(run_info.parameters.get('mpc_total_time', 0)) }} days</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Economics -->
+            <div>
+                <h3 style="font-size: 1rem; font-weight: 600; color: #667eea; margin-bottom: 1rem;">Economics Parameters</h3>
+                <table class="results-table" style="font-size: 0.9rem;">
+                    <tr>
+                        <td><strong>Capital Cost</strong></td>
+                        <td>${{ "{:,.0f}".format(run_info.parameters.get('plant_capital_cost', 0)) }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Plant Life</strong></td>
+                        <td>{{ "%.0f"|format(run_info.parameters.get('plant_life', 0)) }} years</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Discount Rate</strong></td>
+                        <td>{{ "%.1f"|format(run_info.parameters.get('discount_rate', 0) * 100) }}%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Capacity Factor</strong></td>
+                        <td>{{ "%.0f"|format(run_info.parameters.get('capacity_factor', 0) * 100) }}%</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Results -->
+    <div class="card">
+        <div class="card-title">📊 Detailed Results</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <div style="padding: 1rem; background: #f9f9f9; border-radius: 8px;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">Optimization Results</div>
+                <div style="font-size: 0.95rem; line-height: 2; color: #555;">
+                    <div>
+                        <span>Optimal pH:</span>
+                        <strong>{{ "%.3f"|format(run_info.summary.get('results', {}).get('optimal_ph', 0)) }}</strong>
+                    </div>
+                    <div>
+                        <span>Optimal Temperature:</span>
+                        <strong>{{ "%.1f"|format(run_info.summary.get('results', {}).get('optimal_temp', 0)) }}°C</strong>
+                    </div>
+                    <div>
+                        <span>H₂ Yield:</span>
+                        <strong style="color: #667eea;">{{ "{:,.0f}".format(run_info.summary.get('results', {}).get('optimal_h2_yield', 0)) }} m³</strong>
+                    </div>
+                    <div>
+                        <span>Annual H₂:</span>
+                        <strong>{{ "{:,.0f}".format(run_info.summary.get('results', {}).get('annual_h2_kg', 0)) }} kg/year</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding: 1rem; background: #f9f9f9; border-radius: 8px;">
+                <div style="font-weight: 700; color: var(--primary); margin-bottom: 0.5rem;">Optimization & Economics</div>
+                <div style="font-size: 0.95rem; line-height: 2; color: var(--text-muted);">
+                    <div>
+                        <span>MPC Improvement:</span>
+                        <strong style="color: var(--success);">+{{ "%.1f"|format(run_info.summary.get('results', {}).get('mpc_improvement', 0)) }}%</strong>
+                    </div>
+                    <div>
+                        <span>LCOH:</span>
+                        <strong style="color: var(--primary);">{{ "%.2f"|format(run_info.summary.get('results', {}).get('lcoh', 0)) }} $/kg H₂</strong>
+                    </div>
+                    <div>
+                        <span>Plant Capital Cost:</span>
+                        <strong style="color: var(--text-dark);">${{ "{:,.0f}".format(run_info.summary.get('results', {}).get('total_capital', 0)) }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CSV Data Downloads -->
+    {% if run_info.csv_files %}
+    <div class="card">
+        <div class="card-title">📥 Download Raw Data</div>
+        <p style="color: #666; margin-bottom: 1rem;">
+            Export simulation data for further analysis in Excel, Python, or other tools.
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            {% for csv_file in run_info.csv_files %}
+            <a href="/results/{{ run_info.run_id }}/{{ csv_file }}" 
+               download class="btn btn-primary" style="text-align: center;">
+                📊 {{ csv_file }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div class="card" style="text-align: center; margin-bottom: 2rem;">
+        <div class="card-title">🔄 Actions</div>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/history" class="btn btn-primary">← Back to History</a>
+            <button onclick="exportPDF()" class="btn btn-secondary">� Export as PDF</button>
+            <button onclick="compareRuns()" class="btn btn-secondary">📊 Compare Runs</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- FIXED RIGHT SIDEBAR: AI Summary + Chat -->
+<div id="aiSidebar" style="position: fixed; right: 20px; top: 140px; width: 380px; bottom: 80px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(217, 119, 6, 0.15); border: 1px solid rgba(217, 119, 6, 0.2); display: flex; flex-direction: column; z-index: 100; overflow: hidden; transition: all 0.3s ease;">
+    <!-- Top Header with Close Button -->
+    <div style="padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-dark);">💬 AI Panel</div>
+        <button onclick="toggleSidebar()" id="closeBtn" style="background: transparent; border: none; color: var(--text-dark); font-size: 1.5rem; cursor: pointer; padding: 0; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" title="Close AI Panel">
+            ✕
+        </button>
+    </div>
+    
+    <!-- AI Summary Area -->
+    {% if run_info.summary.get('ai_insight') %}
+    <div id="aiSummarySection" style="padding: 1.5rem; border-bottom: 2px solid var(--primary-light); flex-shrink: 0; overflow-y: auto; transition: all 0.3s ease;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div style="font-size: 1.1rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 0.5rem;">
+                🧠 <span>AI Summary</span>
+            </div>
+            <button onclick="toggleAISummary()" id="summaryToggleBtn" style="background: transparent; border: none; color: var(--primary); font-size: 1.2rem; cursor: pointer; padding: 0; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease;" title="Collapse AI Summary">
+                −
+            </button>
+        </div>
+        <div id="summaryContent" style="color: var(--text-dark); font-size: 0.9rem; line-height: 1.6;">
+            {{ run_info.summary.ai_insight | safe | replace('\n', '<br>') }}
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Chat Area -->
+    <div style="display: flex; flex-direction: column; flex: 1; padding: 1.5rem; overflow: hidden;">
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-dark); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            💬 <span>Ask AI</span>
+        </div>
+        
+        <div id="chatHistory" style="border: 1px solid var(--border); background: var(--bg-white); border-radius: 8px; padding: 0.75rem; flex-grow: 1; overflow-y: auto; margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+            <!-- Chat messages append here -->
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; flex-shrink: 0;">
+            <input type="text" id="chatInput" placeholder="Ask about this run..." 
+                   style="flex-grow: 1; padding: 0.65rem 0.75rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem; color: var(--text-dark); background: var(--bg-white);" 
+                   onkeypress="if(event.key === 'Enter') sendChatMessage()">
+            <button onclick="sendChatMessage()" class="btn btn-primary" id="chatBtn" style="padding: 0.65rem 1rem; font-size: 0.85rem;">Send</button>
+        </div>
+    </div>
+</div>
+
+<!-- FLOATING EXPAND BUTTON (visible only when collapsed) -->
+<button id="expandBtn" onclick="toggleSidebar()" style="position: fixed; right: 20px; bottom: 20px; width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 1.5rem; font-weight: 700; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4); display: none; z-index: 99; transition: all 0.3s ease; align-items: center; justify-content: center;" title="Expand AI Panel">
+    💬
+</button>
+
+<script>
+let sidebarCollapsed = false;
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('aiSidebar');
+    const expandBtn = document.getElementById('expandBtn');
+    const mainContent = document.getElementById('mainContent');
+    const toggleBtn = document.getElementById('toggleBtn');
+    
+    sidebarCollapsed = !sidebarCollapsed;
+    
+    if (sidebarCollapsed) {
+        // Collapse: hide sidebar and show floating expand button
+        sidebar.style.display = 'none';
+        expandBtn.style.display = 'flex';
+        mainContent.style.marginRight = '0';
+    } else {
+        // Expand: show sidebar and hide floating button
+        sidebar.style.display = 'flex';
+        expandBtn.style.display = 'none';
+        mainContent.style.marginRight = '420px';
+    }
+}
+
+function toggleAISummary() {
+    const summarySection = document.getElementById('aiSummarySection');
+    const summaryContent = document.getElementById('summaryContent');
+    const summaryToggleBtn = document.getElementById('summaryToggleBtn');
+    
+    if (!summarySection) return; // Exit if AI Summary doesn't exist
+    
+    const isCollapsed = summaryContent.style.display === 'none';
+    
+    if (isCollapsed) {
+        // Expand: show content, show border, show collapse icon
+        summaryContent.style.display = 'block';
+        summarySection.style.paddingBottom = '1.5rem';
+        summarySection.style.borderBottom = '2px solid var(--primary-light)';
+        summaryToggleBtn.textContent = '−';
+        summaryToggleBtn.title = 'Collapse AI Summary';
+    } else {
+        // Collapse: hide content, hide border-bottom, show expand icon
+        summaryContent.style.display = 'none';
+        summarySection.style.paddingBottom = '0.5rem';
+        summarySection.style.borderBottom = 'none';
+        summaryToggleBtn.textContent = '+';
+        summaryToggleBtn.title = 'Expand AI Summary';
+    }
+}
+
+let chatMessages = [];
+const runId = "{{ run_info.run_id }}";
+
+function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const msg = input.value.trim();
+    if (!msg) return;
+    
+    appendMessage(msg, 'user');
+    input.value = '';
+    
+    const btn = document.getElementById('chatBtn');
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            run_id: runId,
+            chat_history: chatMessages,
+            message: msg
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        chatMessages.push({role: "user", content: msg});
+        chatMessages.push({role: "model", content: data.response});
+        appendMessage(data.response, 'bot');
+    })
+    .catch(err => {
+        appendMessage("Error communicating with AI.", 'bot');
+    })
+    .finally(() => {
+        btn.disabled = false;
+        btn.textContent = 'Send';
+    });
+}
+
+function appendMessage(text, sender) {
+    const chatDiv = document.getElementById('chatHistory');
+    const msgDiv = document.createElement('div');
+    msgDiv.style.padding = '0.75rem';
+    msgDiv.style.borderRadius = '8px';
+    msgDiv.style.maxWidth = '80%';
+    msgDiv.style.lineHeight = '1.4';
+    msgDiv.style.wordWrap = 'break-word';
+    msgDiv.style.whiteSpace = 'pre-wrap';
+    
+    if (sender === 'user') {
+        msgDiv.style.background = 'var(--primary)';
+        msgDiv.style.color = 'white';
+        msgDiv.style.alignSelf = 'flex-end';
+        msgDiv.style.borderRadius = '8px 2px 8px 8px';
+    } else {
+        msgDiv.style.background = 'var(--primary-light)';
+        msgDiv.style.color = 'var(--text-dark)';
+        msgDiv.style.alignSelf = 'flex-start';
+        msgDiv.style.border = '1px solid var(--primary)';
+        msgDiv.style.borderRadius = '2px 8px 8px 8px';
+    }
+    
+    msgDiv.textContent = text;
+    chatDiv.appendChild(msgDiv);
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+}
+</script>
+
+<script>
+function exportPDF() {
+    alert('PDF export feature coming soon! Use browser print (Ctrl+P) and "Save as PDF" for now.');
+}
+
+function compareRuns() {
+    alert('Comparison feature coming soon! You can manually open other runs in new tabs.');
+}
+</script>
+
+<!-- Allow file downloads from results_runs directory -->
+<style>
+a[download] {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+a[download]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+}
+</style>
+{% endblock %}

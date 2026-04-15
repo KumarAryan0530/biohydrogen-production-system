@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}Cost Analysis{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <h1 style="color: black; margin-bottom: 1.5rem; font-size: 2rem;">💰 Hydrogen Production Cost Analysis</h1>
+
+    <!-- Overview -->
+    <div class="summary-section" style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Levelized Cost of Hydrogen (LCOH) Analysis</h2>
+        <p style="opacity: 0.9; margin-bottom: 1rem;">
+            This analysis uses a <strong>Discounted Cash Flow (DCF)</strong> approach inspired by DOE H2A methodology. 
+            LCOH represents the breakeven cost per kilogram of hydrogen produced, accounting for all capital, 
+            operational, and maintenance costs over the plant's 20-year lifetime.
+        </p>
+        <div style="font-size: 1.2rem; font-weight: 700; margin-top: 1rem;">
+            💵 <strong>Total LCOH: ${{ "%.2f"|format(data.summary.get('LCOH ($/kg H2)', 0)) }}/kg H₂</strong>
+        </div>
+    </div>
+
+    <!-- Cost Breakdown Chart -->
+    {% if data.cost_breakdown %}
+    <div class="chart-container" style="margin-bottom: 2rem;">
+        <div class="chart-title">📊 Cost Breakdown Visualization</div>
+        <div class="image-container">
+            <img src="data:image/png;base64,{{ data.cost_breakdown }}" alt="Cost Breakdown">
+        </div>
+        <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+            Visual representation of cost components as a percentage of total LCOH. Feedstock dominates (67.6%), 
+            followed by utilities (21.5%), capital (7.3%), and operations (2.2%).
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Detailed Cost Breakdown -->
+    <div class="data-grid" style="grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <!-- Cost Table -->
+        <div class="card">
+            <div class="card-title">📋 Cost Components ($/kg H₂)</div>
+            <table class="results-table" style="font-size: 0.95rem;">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Cost ($/kg)</th>
+                        <th>% of Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>🏢 Capital (Annualized)</td>
+                        <td><strong>$0.20</strong></td>
+                        <td><strong>7.3%</strong></td>
+                    </tr>
+                    <tr>
+                        <td>🔧 Fixed Operating</td>
+                        <td><strong>$0.06</strong></td>
+                        <td><strong>2.2%</strong></td>
+                    </tr>
+                    <tr style="background: rgba(245, 87, 108, 0.1);">
+                        <td>🌾 <strong>Feedstock</strong></td>
+                        <td><strong>$1.86</strong></td>
+                        <td><strong>67.6%</strong></td>
+                    </tr>
+                    <tr style="background: rgba(79, 172, 254, 0.1);">
+                        <td>⚡ <strong>Utilities</strong></td>
+                        <td><strong>$0.59</strong></td>
+                        <td><strong>21.5%</strong></td>
+                    </tr>
+                    <tr style="background: linear-gradient(90deg, rgba(102, 126, 234, 0.2), rgba(255, 255, 255, 0));">
+                        <td><strong>Other</strong></td>
+                        <td><strong>$0.04</strong></td>
+                        <td><strong>1.5%</strong></td>
+                    </tr>
+                    <tr style="background: linear-gradient(90deg, rgba(102, 126, 234, 0.3), rgba(255, 255, 255, 0)); font-weight: 700;">
+                        <td><strong>TOTAL LCOH</strong></td>
+                        <td><strong>${{ "%.2f"|format(data.summary.get('LCOH ($/kg H2)', 0)) }}</strong></td>
+                        <td><strong>100%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Plant Economics -->
+        <div class="card">
+            <div class="card-title">🏭 Plant Economics</div>
+            <div style="line-height: 2; color: #333;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Total Capital Cost:</span>
+                    <strong style="color: #667eea;">${{ "{:,.0f}".format(data.summary.get('Total Capital ($)', 0)) }}</strong>
+                </div>
+                <div style="height: 1px; background: #eee; margin: 0.5rem 0;"></div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Plant Life:</span>
+                    <strong>20 years</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Discount Rate (IRR):</span>
+                    <strong>8.0%</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Capacity Factor:</span>
+                    <strong>90%</strong>
+                </div>
+                <div style="height: 1px; background: #eee; margin: 0.5rem 0;"></div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Annual Fixed Cost:</span>
+                    <strong>$200,000</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Annual H₂ Production:</span>
+                    <strong style="color: #43e97b;">{{ "{:,.0f}".format(data.summary.get('Annual H2 (kg/yr)', 0)) }} kg</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sensitivity Analysis -->
+    <div class="card">
+        <div class="card-title">🔬 Sensitivity Analysis</div>
+        <p style="color: #666; margin-bottom: 1.5rem;">
+            How small changes in key parameters affect the final LCOH. This shows which drivers most impact hydrogen cost.
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+            <div style="padding: 1rem; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">📊 Capital Cost ±10%</div>
+                <p style="color: #555; font-size: 0.9rem;">
+                    <strong>Impact on LCOH:</strong> ±$0.02/kg<br/>
+                    <em>Low sensitivity:</em> Capital is only 7% of total cost.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: rgba(245, 87, 108, 0.1); border-radius: 8px;">
+                <div style="font-weight: 600; color: #f5576c; margin-bottom: 0.5rem;">🌾 Feedstock Cost ±10%</div>
+                <p style="color: #555; font-size: 0.9rem;">
+                    <strong>Impact on LCOH:</strong> ±$0.19/kg<br/>
+                    <em>Highest sensitivity:</em> Feedstock drives the cost.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: rgba(79, 172, 254, 0.1); border-radius: 8px;">
+                <div style="font-weight: 600; color: #4facfe; margin-bottom: 0.5rem;">⚡ Utilities Cost ±10%</div>
+                <p style="color: #555; font-size: 0.9rem;">
+                    <strong>Impact on LCOH:</strong> ±$0.06/kg<br/>
+                    <em>Moderate sensitivity:</em> Utilities are ~21% of cost.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: rgba(67, 233, 123, 0.1); border-radius: 8px;">
+                <div style="font-weight: 600; color: #43e97b; margin-bottom: 0.5rem;">📈 Annual Production ±10%</div>
+                <p style="color: #555; font-size: 0.9rem;">
+                    <strong>Impact on LCOH:</strong> ±$0.25/kg<br/>
+                    <em>Very high sensitivity:</em> Scale matters significantly.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Insights -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(67, 233, 123, 0.05)); border: 2px solid #667eea;">
+        <div class="card-title">💡 Key Economic Insights</div>
+        <ul style="list-style-position: inside; color: #555; line-height: 2; font-size: 0.95rem;">
+            <li><strong>Feedstock is the dominant cost driver</strong> (67.6%). Developing low-cost substrates or integrating waste streams is critical for cost reduction.</li>
+            <li><strong>Scale is crucial:</strong> A 10% increase in annual production reduces LCOH by ~$0.25/kg, almost 10% of total cost.</li>
+            <li><strong>Utilities are the second-largest cost</strong> (21.5%), mainly from pH buffering and aeration. Energy recovery could improve economics.</li>
+            <li><strong>Capital represents only 7.3%</strong> of LCOH over a 20-year plant life with 8% discount rate. Optimizing feed control (MPC) is more valuable than saving on reactors.</li>
+            <li><strong>At ${{ "%.2f"|format(data.summary.get('LCOH ($/kg H2)', 0)) }}/kg H₂:</strong> Still above current SMR hydrogen (~$1.50/kg), but competitive with PEM electrolysis + renewable grid (target: $2–3/kg by 2030).</li>
+        </ul>
+    </div>
+
+    <!-- Comparison -->
+    <div class="card">
+        <div class="card-title">📊 Industry Benchmarks</div>
+        <p style="color: #666; margin-bottom: 1.5rem;">
+            How our calculated LCOH compares to other hydrogen production pathways:
+        </p>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Production Method</th>
+                    <th>LCOH ($/kg H₂)</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="background: rgba(102, 126, 234, 0.1);">
+                    <td><strong>Dark Fermentation (This Study)</strong></td>
+                    <td><strong>${{ "%.2f"|format(data.summary.get('LCOH ($/kg H2)', 0)) }}</strong></td>
+                    <td><span class="badge badge-info">Simulated</span></td>
+                    <td>Optimized at pH 5.0, 30°C with MPC control</td>
+                </tr>
+                <tr>
+                    <td>SMR (Steam Methane Reforming)</td>
+                    <td>$1.30 – $1.80</td>
+                    <td><span class="badge badge-success">Baseline</span></td>
+                    <td>Industrial standard (natural gas dependent)</td>
+                </tr>
+                <tr>
+                    <td>PEM Electrolysis (Grid Power)</td>
+                    <td>$2.50 – $4.00</td>
+                    <td><span class="badge badge-warning">High-Cost</span></td>
+                    <td>Grid electricity; expensive if not renewable</td>
+                </tr>
+                <tr>
+                    <td>PEM Electrolysis (Renewable)</td>
+                    <td>$2.00 – $3.00</td>
+                    <td><span class="badge badge-info">Target</span></td>
+                    <td>Wind/solar powered; cost declining</td>
+                </tr>
+                <tr>
+                    <td>Photofermentation</td>
+                    <td>$3.00 – $5.00</td>
+                    <td><span class="badge badge-warning">Research</span></td>
+                    <td>Relies on photocatalysts; early stage</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

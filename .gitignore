@@ -1,0 +1,26 @@
+# Environments
+venv/
+venv
+.venv/
+.venv
+env/
+ENV/
+
+# Python caching
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Output / logs
+*.log
+main_output.txt
+results/
+results_runs/
+decompiled.txt
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Flask/Env overrides
+.env

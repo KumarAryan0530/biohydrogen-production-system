@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Parameter Sweep{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <h1 style="color: black; margin-bottom: 1.5rem; font-size: 2rem;">🔍 Parameter Sweep Analysis</h1>
+    
+    <!-- Intro Card -->
+    <div class="card" style="grid-column: 1 / -1; margin-bottom: 2rem;">
+        <div class="card-title">📊 What is This?</div>
+        <p style="color: #666; line-height: 1.8;">
+            The parameter sweep explores hydrogen production across a <strong>pH × Temperature grid</strong>. 
+            We tested <strong>7 pH values</strong> (5.0 to 8.0) and <strong>4 temperatures</strong> (25°C to 40°C) 
+            for 30-day simulations. This exhaustive search identifies the optimal conditions before fine-tuning with Nelder-Mead optimization.
+        </p>
+    </div>
+
+    <!-- Heatmap -->
+    {% if data.heatmap %}
+    <div class="chart-container" style="margin-bottom: 2rem;">
+        <div class="chart-title">🔥 H₂ Yield Heatmap (Grid Search Results)</div>
+        <div class="image-container">
+            <img src="data:image/png;base64,{{ data.heatmap }}" alt="H2 Yield Heatmap">
+        </div>
+        <div style="margin-top: 1rem; padding: 1rem; background: #f0f5ff; border-radius: 8px; border-left: 3px solid #667eea;">
+            <p style="color: #333; margin-bottom: 0.5rem;">
+                <strong>🎯 Key Observations:</strong>
+            </p>
+            <ul style="list-style-position: inside; color: #555; line-height: 1.8;">
+                <li>Optimal zone appears at <strong>pH 5.0–5.5</strong> and <strong>30–35°C</strong></li>
+                <li>Lower pH favors acidogenic bacteria that produce H₂</li>
+                <li>Temperature sweet spot balances kinetics vs. thermodynamic stability</li>
+                <li>Very high pH (7.5–8.0) suppresses H₂-producing species</li>
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Sweep Results Table -->
+    <div class="card">
+        <div class="card-title">📋 Detailed Sweep Results</div>
+        <p style="color: #666; margin-bottom: 1rem;">All 28 parameter combinations tested during the grid search:</p>
+        
+        {% if data.sweep_results %}
+        <div style="overflow-x: auto;">
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>pH</th>
+                        <th>Temperature (°C)</th>
+                        <th>H₂ Yield (m³)</th>
+                        <th>Avg Rate (m³/day)</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, val in data.sweep_results['pH'].items() %}
+                    <tr {% if val == data.summary.get('Best pH (grid)') and data.sweep_results['temperature'][key|int] == data.summary.get('Best Temperature (grid)') %}style="background: rgba(67, 233, 123, 0.1); font-weight: 600;"{% endif %}>
+                        <td>{{ "%.1f"|format(val) }}</td>
+                        <td>{{ "%.0f"|format(data.sweep_results['temperature'][key|int]) }}</td>
+                        <td>{{ "{:,.1f}".format(data.sweep_results['hydrogen_yield'][key|int]) }}</td>
+                        <td>{{ "{:.2f}".format(data.sweep_results['avg_h2_rate'][key|int]) }}</td>
+                        <td>
+                            {% if data.sweep_results['status'][key|int] == 'success' %}
+                            <span class="badge badge-success">✓ Success</span>
+                            {% else %}
+                            <span class="badge badge-warning">⚠ Failed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p style="color: #999; text-align: center; padding: 2rem;">No sweep results available</p>
+        {% endif %}
+    </div>
+
+    <!-- Analysis Insights -->
+    <div class="card">
+        <div class="card-title">💡 Analysis & Insights</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <div style="padding: 1rem; background: rgba(102, 126, 234, 0.1); border-radius: 8px; border-left: 3px solid #667eea;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">🧬 Biological Basis</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    Low pH (5.0–5.5) favors acidogenic bacteria like <em>Clostridium</em> species that produce H₂ from glucose. 
+                    Methanogens are inhibited below pH 6.0, preventing H₂ consumption.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: rgba(79, 172, 254, 0.1); border-radius: 8px; border-left: 3px solid #4facfe;">
+                <div style="font-weight: 600; color: #4facfe; margin-bottom: 0.5rem;">🌡️ Temperature Effects</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    The 30°C optimum reflects a compromise: kinetics increase with temperature, but thermodynamic constraints 
+                    and oxygen solubility limit the sweet spot. Mesophilic range (30–35°C) is preferred for dark fermentation.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: rgba(245, 87, 108, 0.1); border-radius: 8px; border-left: 3px solid #f5576c;">
+                <div style="font-weight: 600; color: #f5576c; margin-bottom: 0.5rem;">⚙️ Optimization Strategy</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    The grid search identifies the global optimum region. Nelder-Mead refinement then fine-tunes to 
+                    (pH={{ "%.3f"|format(data.summary.get('Optimal pH', 0)) }}, T={{ "%.1f"|format(data.summary.get('Optimal Temperature', 0)) }}°C).
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Best Point Highlighted -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(67, 233, 123, 0.05)); border: 2px solid #667eea;">
+        <div class="card-title">🏆 Best Conditions (Grid Search)</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+            <div>
+                <div style="font-size: 0.9rem; color: #667eea; font-weight: 600;">pH</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #333;">{{ "%.1f"|format(data.summary.get('Best pH (grid)', 0)) }}</div>
+            </div>
+            <div>
+                <div style="font-size: 0.9rem; color: #667eea; font-weight: 600;">Temperature</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #333;">{{ "%.0f"|format(data.summary.get('Best Temperature (grid)', 0)) }}°C</div>
+            </div>
+            <div>
+                <div style="font-size: 0.9rem; color: #667eea; font-weight: 600;">H₂ Yield</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #333;">{{ "{:,.0f}".format(data.summary.get('Best H2 yield (grid)', 0)) }} m³</div>
+            </div>
+            <div>
+                <div style="font-size: 0.9rem; color: #667eea; font-weight: 600;">Avg Rate</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #333;">{{ "{:.0f}".format(data.summary.get('Best H2 yield (grid)', 0) / 30) }} m³/day</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

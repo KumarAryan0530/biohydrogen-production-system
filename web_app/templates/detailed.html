@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}Detailed Results{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <h1 style="color: black; margin-bottom: 1.5rem; font-size: 2rem;">📊 Detailed Simulation Results</h1>
+
+    <!-- Baseline Production -->
+    <div class="card">
+        <div class="card-title">📈 Baseline H₂ Production Time Series</div>
+        <p style="color: #666; margin-bottom: 1rem;">
+            30-day baseline simulation at pH 5.5 and 35°C showing hydrogen production rate and cumulative yield over time.
+        </p>
+        {% if data.baseline_plot %}
+        <div class="image-container" style="margin-bottom: 1rem;">
+            <img src="data:image/png;base64,{{ data.baseline_plot }}" alt="Baseline H2 Production">
+        </div>
+        {% endif %}
+        <div style="padding: 1rem; background: #f0f5ff; border-radius: 8px; border-left: 3px solid #667eea;">
+            <p style="color: #333; font-size: 0.95rem; line-height: 1.8;">
+                <strong>📝 Interpretation:</strong> The upper plot shows the instantaneous hydrogen production rate (m³/day), 
+                revealing the dynamic behavior during the transient startup phase (~day 0–5) and steady-state production afterward. 
+                The lower plot shows cumulative H₂ yield, which increases monotonically as the reactor produces hydrogen. 
+                The slope of the cumulative plot corresponds to the instantaneous rate.
+            </p>
+        </div>
+    </div>
+
+    <!-- Optimization Journey -->
+    <div class="card">
+        <div class="card-title">🎯 Optimization Journey</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h3 style="font-size: 1.1rem; font-weight: 600; color: #667eea; margin-bottom: 1rem;">Stage 1: Grid Search</h3>
+                <div style="line-height: 2; font-size: 0.95rem; color: #333;">
+                    <div style="padding: 0.75rem; background: #f9f9f9; border-radius: 4px; margin-bottom: 0.5rem;">
+                        <span style="color: #666;">Tested:</span> <strong>7 pH × 4 Temps = 28 combinations</strong>
+                    </div>
+                    <div style="padding: 0.75rem; background: #f9f9f9; border-radius: 4px; margin-bottom: 0.5rem;">
+                        <span style="color: #666;">Best Found:</span> <strong>pH {{ "%.1f"|format(data.summary.get('Best pH (grid)', 0)) }}, T {{ "%.0f"|format(data.summary.get('Best Temperature (grid)', 0)) }}°C</strong>
+                    </div>
+                    <div style="padding: 0.75rem; background: #f9f9f9; border-radius: 4px;">
+                        <span style="color: #666;">H₂ Yield:</span> <strong>{{ "{:,.0f}".format(data.summary.get('Best H2 yield (grid)', 0)) }} m³</strong>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 style="font-size: 1.1rem; font-weight: 600; color: #f5576c; margin-bottom: 1rem;">Stage 2: Fine Tuning (Nelder-Mead)</h3>
+                <div style="line-height: 2; font-size: 0.95rem; color: #333;">
+                    <div style="padding: 0.75rem; background: #f9f9f9; border-radius: 4px; margin-bottom: 0.5rem;">
+                        <span style="color: #666;">Method:</span> <strong>Nelder-Mead Simplex Optimizer</strong>
+                    </div>
+                    <div style="padding: 0.75rem; background: #f9f9f9; border-radius: 4px; margin-bottom: 0.5rem;">
+                        <span style="color: #666;">Optimal:</span> <strong>pH {{ "%.3f"|format(data.summary.get('Optimal pH', 0)) }}, T {{ "%.1f"|format(data.summary.get('Optimal Temperature', 0)) }}°C</strong>
+                    </div>
+                    <div style="padding: 0.75rem; background: #f9f9f9; border-radius: 4px;">
+                        <span style="color: #666;">H₂ Yield:</span> <strong style="color: #43e97b;">{{ "{:,.0f}".format(data.summary.get('Optimal H2 yield', 0)) }} m³</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(67, 233, 123, 0.1); border-radius: 8px; border-left: 3px solid #43e97b;">
+            <strong style="color: #333;">🎉 Improvement:</strong> 
+            {{ "{:.1f}".format((data.summary.get('Optimal H2 yield', 0) - data.summary.get('Best H2 yield (grid)', 0)) / data.summary.get('Best H2 yield (grid)', 0) * 100) }}% 
+            additional H₂ yield from grid best to fine-tuned optimum
+        </div>
+    </div>
+
+    <!-- MPC Control Details -->
+    <div class="card">
+        <div class="card-title">🎮 Model Predictive Control (MPC) Details</div>
+        <p style="color: #666; margin-bottom: 1rem;">
+            <strong>MPC Strategy:</strong> At each 5-day interval, the controller simulates 5 days forward with different candidate 
+            feed rates. It selects the feed rate that maximizes predicted H₂ output (receding horizon approach).
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="padding: 1rem; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">📊 Baseline (No Control)</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #333;">
+                    {{ "{:,.0f}".format(data.summary.get('Uncontrolled H2 yield', 0)) }} m³
+                </div>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
+                    30-day static feed rate (q_ad = 178.47 m³/d)
+                </p>
+            </div>
+            <div style="padding: 1rem; background: rgba(67, 233, 123, 0.1); border-radius: 8px;">
+                <div style="font-weight: 600; color: #43e97b; margin-bottom: 0.5rem;">🚀 Controlled (MPC)</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #333;">
+                    {{ "{:,.0f}".format(data.summary.get('Controlled H2 yield', 0)) }} m³
+                </div>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
+                    Feed rate optimized every 5 days (q_ad varies)
+                </p>
+            </div>
+            <div style="padding: 1rem; background: rgba(79, 172, 254, 0.1); border-radius: 8px;">
+                <div style="font-weight: 600; color: #4facfe; margin-bottom: 0.5rem;">⚡ Improvement</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #333;">
+                    <span style="color: #00f2fe;">+{{ "%.1f"|format(data.summary.get('MPC Improvement', 0)) }}%</span>
+                </div>
+                <p style="color: #666; font-size: 0.9rem; margin-top: 0.5rem;">
+                    Additional H₂ from dynamic feed control
+                </p>
+            </div>
+        </div>
+        <div style="padding: 1rem; background: #fff3cd; border-radius: 8px; border-left: 3px solid #ffc107;">
+            <p style="color: #333; font-size: 0.95rem; margin-bottom: 0.5rem;">
+                <strong>💡 Why MPC Works:</strong> Dynamic feed management prevents substrate accumulation and pH swings. 
+                By looking ahead 5 days and adjusting feed proactively, the controller maintains optimal balance between 
+                bacterial growth, substrate consumption, and hydrogen production rates.
+            </p>
+        </div>
+    </div>
+
+    <!-- State Variable Dynamics -->
+    <div class="card">
+        <div class="card-title">🧬 ADM1 State Variables & Key Indicators</div>
+        <p style="color: #666; margin-bottom: 1rem;">
+            The Anaerobic Digestion Model No. 1 (ADM1) tracks 19+ state variables representing bacterial populations, 
+            soluble substrates, particulate substrates, and gas phases. Below are the critical variables for hydrogen production:
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <div style="padding: 1rem; background: #f0f5ff; border-radius: 8px; border-left: 3px solid #667eea;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem; font-size: 0.9rem;">🦠 Biomass: X_h2 (H₂-Producing Bacteria)</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    Acidogenic bacteria that produce H₂ from carbohydrates and amino acids. 
+                    Growth and decay are driven by substrate availability and pH inhibition (optimal pH 5.0–5.5).
+                </p>
+            </div>
+            <div style="padding: 1rem; background: #f0f5ff; border-radius: 8px; border-left: 3px solid #667eea;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem; font-size: 0.9rem;">⚛️ Substrate: S_su (Monosaccharides/Glucose)</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    Readily fermentable sugar. Fed as constant influent; consumed by acidogenic bacteria. 
+                    High residual indicates excess feeding; depletion limits H₂ production.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: #f0f5ff; border-radius: 8px; border-left: 3px solid #667eea;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem; font-size: 0.9rem;">💨 Gas: S_h2 (Dissolved H₂)</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    Dissolved hydrogen in liquid. High levels indicate inhibition by H₂ partial pressure. 
+                    Gas stripping (sparging/biogas recovery) moves H₂ to gas phase.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: #f0f5ff; border-radius: 8px; border-left: 3px solid #4facfe;">
+                <div style="font-weight: 600; color: #4facfe; margin-bottom: 0.5rem; font-size: 0.9rem;">🔬 pH Control</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    ADM1 includes complex acid-base equilibria. In this study, pH is set directly (buffering assumption) 
+                    to isolate the effect of pH on kinetics without pH solver complexity.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: #f0f5ff; border-radius: 8px; border-left: 3px solid #4facfe;">
+                <div style="font-weight: 600; color: #4facfe; margin-bottom: 0.5rem; font-size: 0.9rem;">🌡️ Temperature Correction</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    All rate constants (k_m, Y_*, etc.) are scaled by <em>k(T) = k_ref × exp(E_a/R × (1/T_ref - 1/T))</em>. 
+                    Typical E_a ≈ 50 kJ/mol for enzymatic processes.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: #f0f5ff; border-radius: 8px; border-left: 3px solid #4facfe;">
+                <div style="font-weight: 600; color: #4facfe; margin-bottom: 0.5rem; font-size: 0.9rem;">🚫 Methanogenesis Disabled</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    Rho_11 (acetale → CH₄) and Rho_12 (H₂ + CO₂ → CH₄) are set to zero. 
+                    This is the key modification that forces H₂ to accumulate instead of being consumed.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulation Parameters -->
+    <div class="card">
+        <div class="card-title">⚙️ Simulation Parameters</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h3 style="font-size: 1rem; font-weight: 600; color: #667eea; margin-bottom: 1rem;">Model Configuration</h3>
+                <table class="results-table" style="font-size: 0.9rem;">
+                    <tr>
+                        <td class="bg-light"><strong>Model Type</strong></td>
+                        <td class="text-bold">ADM1 (Anaerobic Digestion Model No. 1)</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Methanogenesis</strong></td>
+                        <td class="text-bold">DISABLED (Rho_11 = Rho_12 = 0)</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>pH Control</strong></td>
+                        <td class="text-bold">Fixed (buffered reactor)</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Temperature Effect</strong></td>
+                        <td class="text-bold">Arrhenius scaling</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Influent Type</strong></td>
+                        <td class="text-bold">Synthetic glucose (5 g/L)</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Solver</strong></td>
+                        <td class="text-bold">scipy.integrate.odeint (RK45)</td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <h3 style="font-size: 1rem; font-weight: 600; color: #667eea; margin-bottom: 1rem;">Simulation Setup</h3>
+                <table class="results-table" style="font-size: 0.9rem;">
+                    <tr>
+                        <td class="bg-light"><strong>Simulation Duration</strong></td>
+                        <td class="text-bold">30 days</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Time Step (Parameter Sweep)</strong></td>
+                        <td class="text-bold">1.0 day</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Reactor Volume</strong></td>
+                        <td class="text-bold">Fixed (influent scales proportionally)</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Gas Transfer Model</strong></td>
+                        <td class="text-bold">Simple equilibrium (Henry's law)</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Recycle Loop</strong></td>
+                        <td class="text-bold">None (open system)</td>
+                    </tr>
+                    <tr>
+                        <td class="bg-light"><strong>Temperature Range (Sweep)</strong></td>
+                        <td class="text-bold">25, 30, 35, 40°C</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Files Reference -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(67, 233, 123, 0.05)); border: 2px dashed #667eea;">
+        <div class="card-title">📁 Generated Output Files</div>
+        <p style="color: #666; margin-bottom: 1rem;">
+            The following files are saved in the <code style="background: #f5f5f5; padding: 0.2rem 0.4rem; border-radius: 3px;">results/</code> directory:
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+            <div style="padding: 1rem; background: white; border-radius: 8px; border: 1px solid #ddd;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">📊 CSV Files</div>
+                <ul style="list-style-position: inside; color: #555; font-size: 0.9rem;">
+                    <li><code>baseline_simulation.csv</code> — 30 time points, baseline run</li>
+                    <li><code>sweep_results.csv</code> — 28 grid combinations with yields</li>
+                    <li><code>mpc_feed_rates.csv</code> — MPC control schedule</li>
+                    <li><code>summary.csv</code> — Key results summary</li>
+                </ul>
+            </div>
+            <div style="padding: 1rem; background: white; border-radius: 8px; border: 1px solid #ddd;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">📈 PNG Charts</div>
+                <ul style="list-style-position: inside; color: #555; font-size: 0.9rem;">
+                    <li><code>h2_yield_heatmap.png</code> — Parameter sweep heatmap</li>
+                    <li><code>baseline_h2_production.png</code> — Time series chart</li>
+                    <li><code>cost_breakdown.png</code> — Economics pie chart</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- References -->
+    <div class="card">
+        <div class="card-title">📚 References & Models Used</div>
+        <ul style="list-style-position: inside; color: #555; font-size: 0.9rem; line-height: 2;">
+            <li>
+                <strong>ADM1:</strong> Rosen & Jeppsson (2006). 
+                <em>"Aspects on ADM1 implementation within the BSM2 framework."</em> 
+                Lund University.
+            </li>
+            <li>
+                <strong>MPC (Fermentation):</strong> Inspired by biosustain/fermentation-mpc. 
+                Receding horizon control for bioprocess optimization.
+            </li>
+            <li>
+                <strong>Economics:</strong> DOE H2A Hydrogen Analysis Production Model. 
+                Schneidewind (2021). pyH2A: Python framework for hydrogen cost analysis.
+            </li>
+            <li>
+                <strong>Dark Fermentation:</strong> Hallenbeck & Ghosh (2009). 
+                <em>"Biological hydrogen production: fundamentals and applications."</em> 
+                International Journal of Hydrogen Energy, 34(17), 7379–7389.
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

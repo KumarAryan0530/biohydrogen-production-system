@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Not Found{% endblock %}
+
+{% block content %}
+<div class="mb-3" style="text-align: center; padding: 3rem;">
+    <div style="font-size: 4rem; margin-bottom: 1rem;">❌</div>
+    <h1 style="color: #667eea; margin-bottom: 1rem; font-size: 2rem;">404 - Not Found</h1>
+    <p style="color: #666; margin-bottom: 2rem; font-size: 1.1rem;">
+        {{ message }}
+    </p>
+    <a href="/history" class="btn btn-primary" style="font-size: 1.1rem;">
+        ← Go Back to History
+    </a>
+</div>
+{% endblock %}

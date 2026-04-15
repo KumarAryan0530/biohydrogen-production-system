@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+
+{% block title %}Configure Simulation{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <h1 style="color: black; margin-bottom: 1.5rem; font-size: 2rem;">⚙️ Configure Simulation Parameters</h1>
+
+    <!-- Intro Card -->
+    <div class="card" style="margin-bottom: 2rem;">
+        <div class="card-title">🎯 Easy Parameter Setup</div>
+        <p style="color: #666; line-height: 1.8;">
+            Use this form to configure your biohydrogen simulation without editing code. 
+            Choose your parameters, give your run a name, and submit. 
+            Results will be automatically saved and accessible in the <strong>History</strong> page for future reference and comparison.
+        </p>
+    </div>
+
+    <!-- Configuration Form -->
+    <div class="card">
+        <div class="card-title">📋 Simulation Configuration</div>
+        
+        <form id="configForm" method="POST" action="/api/run-simulation" enctype="application/json">
+            <!-- Run Name -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 600; color: #667eea; margin-bottom: 1rem;">📝 Run Information</h3>
+                <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
+                    <div>
+                        <label for="run_name" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Run Name:</label>
+                        <input type="text" id="run_name" name="run_name" value="{{ params['run_name'] }}" 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;"
+                               placeholder="e.g., Optimized Feed Control v2">
+                        <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">A descriptive name for this simulation run</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Baseline Simulation Settings -->
+            <div style="margin-bottom: 2rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 600; color: #667eea; margin-bottom: 1rem;">🧪 Baseline Simulation</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div>
+                        <label for="baseline_ph" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">pH:</label>
+                        <input type="number" id="baseline_ph" name="baseline_ph" value="{{ params['baseline_ph'] }}" step="0.1" min="4" max="9"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                        <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">Optimal range: 5.0–5.5</p>
+                    </div>
+                    <div>
+                        <label for="baseline_temp" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Temperature (°C):</label>
+                        <input type="number" id="baseline_temp" name="baseline_temp" value="{{ params['baseline_temp'] }}" step="1" min="20" max="50"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                        <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">Optimal range: 30–35°C</p>
+                    </div>
+                    <div>
+                        <label for="baseline_days" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Simulation Days:</label>
+                        <input type="number" id="baseline_days" name="baseline_days" value="{{ params['baseline_days'] }}" step="1" min="1" max="100"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
+                        <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">Duration for baseline run</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parameter Sweep Settings -->
+            <div style="margin-bottom: 2rem; padding: 1.5rem; background: #f9f9f9; border-radius: 8px; border-left: 3px solid #667eea;">
+                <h3 style="font-size: 1.1rem; font-weight: 600; color: #667eea; margin-bottom: 1rem;">🔍 Parameter Sweep Grid</h3>
+                <p style="color: #666; margin-bottom: 1rem; font-size: 0.95rem;">
+                    Define the pH and temperature ranges to explore. The simulation will test all combinations.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                    <div>
+                        <label for="sweep_ph_min" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">pH Min:</label>
+                        <input type="number" id="sweep_ph_min" name="sweep_ph_min" value="{{ params['sweep_ph_min'] }}" step="0.1"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                    <div>
+                        <label for="sweep_ph_max" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">pH Max:</label>
+                        <input type="number" id="sweep_ph_max" name="sweep_ph_max" value="{{ params['sweep_ph_max'] }}" step="0.1"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                    <div>
+                        <label for="sweep_ph_step" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">pH Step:</label>
+                        <input type="number" id="sweep_ph_step" name="sweep_ph_step" value="{{ params['sweep_ph_step'] }}" step="0.1"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                        <p style="font-size: 0.8rem; color: #999; margin-top: 0.25rem;">Smaller = finer grid, longer runtime</p>
+                    </div>
+
+                    <div>
+                        <label for="sweep_temp_min" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Temp Min (°C):</label>
+                        <input type="number" id="sweep_temp_min" name="sweep_temp_min" value="{{ params['sweep_temp_min'] }}" step="1"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                    <div>
+                        <label for="sweep_temp_max" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Temp Max (°C):</label>
+                        <input type="number" id="sweep_temp_max" name="sweep_temp_max" value="{{ params['sweep_temp_max'] }}" step="1"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                    <div>
+                        <label for="sweep_temp_step" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Temp Step (°C):</label>
+                        <input type="number" id="sweep_temp_step" name="sweep_temp_step" value="{{ params['sweep_temp_step'] }}" step="1"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- MPC Control Settings -->
+            <div style="margin-bottom: 2rem; padding: 1.5rem; background: #f9f9f9; border-radius: 8px; border-left: 3px solid #4facfe;">
+                <h3 style="font-size: 1.1rem; font-weight: 600; color: #4facfe; margin-bottom: 1rem;">🎮 MPC Control Settings</h3>
+                <p style="color: #666; margin-bottom: 1rem; font-size: 0.95rem;">
+                    Model Predictive Control parameters for feed rate optimization.
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div>
+                        <label for="mpc_control_horizon" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Control Horizon (days):</label>
+                        <input type="number" id="mpc_control_horizon" name="mpc_control_horizon" value="{{ params['mpc_control_horizon'] }}" step="1" min="1"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                        <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">How far ahead to predict (5 days typical)</p>
+                    </div>
+                    <div>
+                        <label for="mpc_control_interval" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Control Interval (days):</label>
+                        <input type="number" id="mpc_control_interval" name="mpc_control_interval" value="{{ params['mpc_control_interval'] }}" step="1" min="1"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                        <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">Receding horizon update frequency</p>
+                    </div>
+                    <div>
+                        <label for="mpc_total_time" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Total Simulation Time (days):</label>
+                        <input type="number" id="mpc_total_time" name="mpc_total_time" value="{{ params['mpc_total_time'] }}" step="1" min="1"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Economics Settings -->
+            <div style="margin-bottom: 2rem; padding: 1.5rem; background: #f9f9f9; border-radius: 8px; border-left: 3px solid #f5576c;">
+                <h3 style="font-size: 1.1rem; font-weight: 600; color: #f5576c; margin-bottom: 1rem;">💰 Economics Parameters</h3>
+                <p style="color: #666; margin-bottom: 1rem; font-size: 0.95rem;">
+                    Plant and financial assumptions for cost analysis (DCF-based LCOH).
+                </p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div>
+                        <label for="plant_capital_cost" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Capital Cost ($):</label>
+                        <input type="number" id="plant_capital_cost" name="plant_capital_cost" value="{{ params['plant_capital_cost'] }}" step="100000" min="0"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                        <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">Total installed plant cost</p>
+                    </div>
+                    <div>
+                        <label for="plant_life" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Plant Life (years):</label>
+                        <input type="number" id="plant_life" name="plant_life" value="{{ params['plant_life'] }}" step="1" min="5" max="50"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                    </div>
+                    <div>
+                        <label for="discount_rate" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Discount Rate (%):</label>
+                        <input type="number" id="discount_rate" name="discount_rate" value="{{ params['discount_rate'] * 100 }}" step="0.1" min="0" max="20"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                        <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">8% is typical (after-tax IRR)</p>
+                    </div>
+                    <div>
+                        <label for="capacity_factor" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #333;">Capacity Factor (%):</label>
+                        <input type="number" id="capacity_factor" name="capacity_factor" value="{{ params['capacity_factor'] * 100 }}" step="1" min="50" max="100"
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px;">
+                        <p style="font-size: 0.85rem; color: #999; margin-top: 0.25rem;">Fraction of year in operation (90% = 328 days/year)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button type="submit" class="btn btn-primary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    🚀 Submit & Run Simulation
+                </button>
+                <button type="reset" class="btn btn-secondary" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                    ↺ Reset to Defaults
+                </button>
+            </div>
+        </form>
+
+        <!-- Status Message and Terminal -->
+        <div id="statusMessage" style="display: none; margin-top: 2rem; margin-bottom: 1rem; padding: 1.5rem; border-radius: 8px; font-weight: 600;">
+        </div>
+        
+        <div id="terminalContainer" style="display: none; background: #1e1e1e; border-radius: 8px; padding: 1rem; margin-bottom: 2rem; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
+            <div style="color: #bbb; font-family: monospace; font-size: 0.85rem; margin-bottom: 0.5rem; border-bottom: 1px solid #333; padding-bottom: 0.5rem;">
+                Terminal Output <span id="terminalSpinner" class="spinner-border spinner-border-sm" style="display: none;" role="status"></span>
+            </div>
+            <pre id="terminalOutput" style="color: #0f0; background: transparent; font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; margin: 0; padding: 0; min-height: 200px; max-height: 400px; overflow-y: auto; white-space: pre-wrap;"></pre>
+        </div>
+    </div>
+
+    <!-- Help Card -->
+    <div class="card" style="margin-top: 2rem;">
+        <div class="card-title">💡 Tips & Best Practices</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <div style="padding: 1rem; background: #f0f5ff; border-radius: 8px;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">🎯 For Quick Testing</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    Use a narrower pH range (e.g., 5.0–6.0) and fewer temperatures (3–4 values) to get results in ~10–30 seconds.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: #f0f5ff; border-radius: 8px;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">📊 For Detailed Analysis</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    Use finer grids (pH step 0.2, Temp step 2) and longer simulation times (30–50 days) for publication-quality results.
+                </p>
+            </div>
+            <div style="padding: 1rem; background: #f0f5ff; border-radius: 8px;">
+                <div style="font-weight: 600; color: #667eea; margin-bottom: 0.5rem;">💾 Save & Compare</div>
+                <p style="color: #555; font-size: 0.9rem; line-height: 1.6;">
+                    Each run is saved independently. Go to <strong>History</strong> to compare different parameter sets side-by-side.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('configForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const statusDiv = document.getElementById('statusMessage');
+    
+    // Gather all form data
+    const formData = {
+        run_name: document.getElementById('run_name').value,
+        baseline_ph: parseFloat(document.getElementById('baseline_ph').value),
+        baseline_temp: parseFloat(document.getElementById('baseline_temp').value),
+        baseline_days: parseFloat(document.getElementById('baseline_days').value),
+        sweep_ph_min: parseFloat(document.getElementById('sweep_ph_min').value),
+        sweep_ph_max: parseFloat(document.getElementById('sweep_ph_max').value),
+        sweep_ph_step: parseFloat(document.getElementById('sweep_ph_step').value),
+        sweep_temp_min: parseFloat(document.getElementById('sweep_temp_min').value),
+        sweep_temp_max: parseFloat(document.getElementById('sweep_temp_max').value),
+        sweep_temp_step: parseFloat(document.getElementById('sweep_temp_step').value),
+        sweep_days: parseFloat(document.getElementById('baseline_days').value),
+        mpc_control_horizon: parseFloat(document.getElementById('mpc_control_horizon').value),
+        mpc_control_interval: parseFloat(document.getElementById('mpc_control_interval').value),
+        mpc_total_time: parseFloat(document.getElementById('mpc_total_time').value),
+        plant_capital_cost: parseFloat(document.getElementById('plant_capital_cost').value),
+        plant_life: parseFloat(document.getElementById('plant_life').value),
+        discount_rate: parseFloat(document.getElementById('discount_rate').value) / 100,
+        capacity_factor: parseFloat(document.getElementById('capacity_factor').value) / 100,
+    };
+    
+    const terminalContainer = document.getElementById('terminalContainer');
+    const terminalOutput = document.getElementById('terminalOutput');
+    const terminalSpinner = document.getElementById('terminalSpinner');
+    const submitBtn = document.querySelector('button[type="submit"]');
+    
+    // Disable submit button
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '⏳ Simulation Running...';
+    
+    statusDiv.style.display = 'block';
+    terminalContainer.style.display = 'block';
+    terminalSpinner.style.display = 'inline-block';
+    
+    statusDiv.style.background = '#fff3cd';
+    statusDiv.style.color = '#856404';
+    statusDiv.style.borderLeft = '3px solid #ffc107';
+    statusDiv.textContent = '⏳ Running simulation (this may take 1-2 minutes)...';
+    terminalOutput.textContent = 'Connecting to simulation process...\n';
+    
+    // Polling function for logs
+    let logInterval = setInterval(() => {
+        fetch('/api/live-logs')
+        .then(r => r.json())
+        .then(data => {
+            if (data.logs) {
+                terminalOutput.textContent = data.logs;
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
+        }).catch(err => console.error("Log fetch error:", err));
+    }, 1000);
+    
+    fetch('/api/run-simulation', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        clearInterval(logInterval);
+        terminalSpinner.style.display = 'none';
+        
+        // Final log fetch
+        fetch('/api/live-logs').then(r => r.json()).then(data => {
+            if (data.logs) {
+                terminalOutput.textContent = data.logs;
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
+        });
+
+        if (response.status === 200 || response.status === 202) {
+            return response.json().then(data => {
+                statusDiv.style.background = '#d4edda';
+                statusDiv.style.color = '#155724';
+                statusDiv.style.borderLeft = '3px solid #28a745';
+                
+                if (data.metrics) {
+                    statusDiv.innerHTML = `
+                        ✅ Simulation completed successfully!<br>
+                        <small style="margin-top: 10px; display: block;">
+                            Optimal pH: <strong>${data.metrics.optimal_ph}</strong> | 
+                            Optimal Temp: <strong>${data.metrics.optimal_temp}°C</strong> | 
+                            H₂ Yield: <strong>${data.metrics.h2_yield}</strong> m³ | 
+                            MPC Improvement: <strong>${data.metrics.mpc_improvement}%</strong> | 
+                            LCOH: <strong>$${data.metrics.lcoh}</strong>/kg H₂
+                        </small>
+                    `;
+                } else {
+                    statusDiv.textContent = '✅ ' + data.message;
+                }
+                
+                submitBtn.innerHTML = '✅ Done';
+                // Redirect to history/details page after 4 seconds
+                setTimeout(() => {
+                    window.location.href = '/history';
+                }, 4000);
+            });
+        } else {
+            return response.json().then(data => {
+                const err = new Error(data.message || 'Unknown error');
+                err.ai_diagnosis = data.ai_diagnosis;
+                throw err;
+            });
+        }
+    })
+    .catch(error => {
+        clearInterval(logInterval);
+        terminalSpinner.style.display = 'none';
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '🚀 Submit & Run Simulation';
+        
+        statusDiv.style.background = '#f8d7da';
+        statusDiv.style.color = '#721c24';
+        statusDiv.style.borderLeft = '3px solid #f5576c';
+        
+        let errorHtml = `❌ Error: ${error.message}`;
+        if (error.ai_diagnosis) {
+            errorHtml += `<div style="margin-top:10px; padding:10px; background:rgba(255,255,255,0.6); border-radius:5px; border-left:3px solid #667eea;"><strong>🤖 AI Diagnosis:</strong> ${error.ai_diagnosis}</div>`;
+        }
+        statusDiv.innerHTML = errorHtml;
+    });
+});
+</script>
+{% endblock %}

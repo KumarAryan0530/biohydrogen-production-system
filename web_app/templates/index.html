@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <!-- Main Summary Header -->
+    <div class="summary-section">
+        <h1 class="summary-title">🎯 Biohydrogen Production Optimization Results</h1>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <div class="summary-label">Best pH</div>
+                <div class="summary-value">{{ "%.2f"|format(data.summary.get('Optimal pH', 0)) }}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Optimal Temperature</div>
+                <div class="summary-value">{{ "%.1f"|format(data.summary.get('Optimal Temperature', 0)) }}°C</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Max H₂ Yield</div>
+                <div class="summary-value">{{ "{:,.0f}".format(data.summary.get('Optimal H2 yield', 0)) }}</div>
+                <div style="font-size: 0.8rem; opacity: 0.8;">m³ (30 days)</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">LCOH</div>
+                <div class="summary-value">${{ "%.2f"|format(data.summary.get('LCOH ($/kg H2)', 0)) }}</div>
+                <div style="font-size: 0.8rem; opacity: 0.8;">per kg H₂</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <h2 style="color: black; margin-bottom: 1.5rem; font-size: 1.5rem;">📊 Key Performance Indicators</h2>
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-label">🧬 Baseline H₂ Yield</div>
+            <div class="metric-value">{{ "{:,.0f}".format(data.summary.get('Uncontrolled H2 yield', 0)) }}</div>
+            <div class="metric-unit">m³ (30 days)</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-label">🚀 MPC Controlled H₂</div>
+            <div class="metric-value">{{ "{:,.0f}".format(data.summary.get('Controlled H2 yield', 0)) }}</div>
+            <div class="metric-unit">m³ (30 days)</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-label">⚡ MPC Improvement</div>
+            <div class="metric-value">{{ "+%.1f"|format(data.summary.get('MPC Improvement', 0)) }}%</div>
+            <div class="metric-unit">Performance Boost</div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-label">💰 Annual H₂ Production</div>
+            <div class="metric-value">{{ "{:,.0f}".format(data.summary.get('Annual H2 (kg/yr)', 0)) }}</div>
+            <div class="metric-unit">kg/year</div>
+        </div>
+    </div>
+</div>
+
+<!-- Visualizations Section -->
+<div class="data-grid">
+    <!-- Heatmap -->
+    {% if data.heatmap %}
+    <div class="chart-container" style="grid-column: 1 / -1;">
+        <div class="chart-title">🔥 Parameter Optimization Landscape (pH vs Temperature)</div>
+        <div class="image-container">
+            <img src="data:image/png;base64,{{ data.heatmap }}" alt="H2 Yield Heatmap">
+        </div>
+        <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+            This heatmap shows hydrogen yield across all tested pH and temperature combinations. 
+            The optimal conditions are clearly visible at pH 5.0 and 30°C.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Baseline Production Chart -->
+    {% if data.baseline_plot %}
+    <div class="chart-container" style="grid-column: 1 / -1;">
+        <div class="chart-title">📈 Baseline H₂ Production Over Time</div>
+        <div class="image-container">
+            <img src="data:image/png;base64,{{ data.baseline_plot }}" alt="Baseline H2 Production">
+        </div>
+        <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+            Time-series plot showing hydrogen production rate (m³/day) and cumulative yield during the 30-day baseline simulation 
+            at pH 5.5 and 35°C. Note the stable production phase after initial startup.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Cost Breakdown Chart -->
+    {% if data.cost_breakdown %}
+    <div class="chart-container" style="grid-column: 1 / -1;">
+        <div class="chart-title">💵 Hydrogen Production Cost Breakdown</div>
+        <div class="image-container">
+            <img src="data:image/png;base64,{{ data.cost_breakdown }}" alt="Cost Breakdown">
+        </div>
+        <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+            Capital costs are annualized over the 20-year plant lifetime. Feedstock is the dominant cost driver ($1.86/kg H₂), 
+            followed by utilities ($0.59/kg H₂). Total LCOH: $2.75/kg H₂.
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Detailed Results Section -->
+<div class="card">
+    <div class="card-title">📋 Optimization Summary</div>
+    <table class="results-table">
+        <thead>
+            <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Unit</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Best pH (Grid)</strong></td>
+                <td>{{ "%.1f"|format(data.summary.get('Best pH (grid)', 0)) }}</td>
+                <td>—</td>
+                <td>Optimal pH from 7×4 parameter sweep</td>
+            </tr>
+            <tr>
+                <td><strong>Best Temp (Grid)</strong></td>
+                <td>{{ "%.1f"|format(data.summary.get('Best Temperature (grid)', 0)) }}</td>
+                <td>°C</td>
+                <td>Temperature at best grid point</td>
+            </tr>
+            <tr style="background: rgba(102, 126, 234, 0.05);">
+                <td><strong>Optimal pH (Refined)</strong></td>
+                <td>{{ "%.3f"|format(data.summary.get('Optimal pH', 0)) }}</td>
+                <td>—</td>
+                <td>Fine-tuned via Nelder-Mead optimization</td>
+            </tr>
+            <tr style="background: rgba(102, 126, 234, 0.05);">
+                <td><strong>Optimal Temperature (Refined)</strong></td>
+                <td>{{ "%.1f"|format(data.summary.get('Optimal Temperature', 0)) }}</td>
+                <td>°C</td>
+                <td>Fine-tuned via Nelder-Mead optimization</td>
+            </tr>
+            <tr>
+                <td><strong>Total Capital Cost</strong></td>
+                <td>${{ "{:,.0f}".format(data.summary.get('Total Capital ($)', 0)) }}</td>
+                <td>USD</td>
+                <td>Total installed plant capital</td>
+            </tr>
+            <tr>
+                <td><strong>Annual H₂ Production</strong></td>
+                <td>{{ "{:,.1f}".format(data.summary.get('Annual H2 (kg/yr)', 0)) }}</td>
+                <td>kg/year</td>
+                <td>Projected 90% capacity factor</td>
+            </tr>
+            <tr style="background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), rgba(255, 255, 255, 0));">
+                <td><strong>LCOH</strong></td>
+                <td><span class="highlighted">${{ "%.2f"|format(data.summary.get('LCOH ($/kg H2)', 0)) }}</span></td>
+                <td>$/kg H₂</td>
+                <td>Levelized Cost of Hydrogen (DCF-based)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Control Performance -->
+<div class="card">
+    <div class="card-title">🎮 MPC Control Performance</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+        <div>
+            <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">Uncontrolled H₂ (Baseline)</div>
+            <div style="font-size: 2rem; font-weight: 700; color: #764ba2;">{{ "{:,.0f}".format(data.summary.get('Uncontrolled H2 yield', 0)) }} m³</div>
+        </div>
+        <div>
+            <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">Controlled H₂ (MPC)</div>
+            <div style="font-size: 2rem; font-weight: 700; color: #43e97b;">{{ "{:,.0f}".format(data.summary.get('Controlled H2 yield', 0)) }} m³</div>
+        </div>
+        <div>
+            <div style="font-size: 0.9rem; color: #666; margin-bottom: 0.5rem;">Improvement</div>
+            <div style="font-size: 2rem; font-weight: 700; color: #00f2fe; improvement">
+                <span class="improvement">+{{ "%.1f"|format(data.summary.get('MPC Improvement', 0)) }}%</span>
+            </div>
+        </div>
+    </div>
+    <p style="margin-top: 1.5rem; padding: 1rem; background: rgba(67, 233, 123, 0.1); border-left: 3px solid #43e97b; border-radius: 4px; color: #333;">
+        <strong>🚀 Key Insight:</strong> The Model Predictive Controller achieved a {{ "%.1f"|format(data.summary.get('MPC Improvement', 0)) }}% improvement in hydrogen yield 
+        by dynamically adjusting the feed rate (q_ad) every 5 days, compared to a static baseline feed rate.
+    </p>
+</div>
+
+<!-- Economic Summary -->
+<div class="card">
+    <div class="card-title">💰 Economic Analysis Summary</div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        <div style="padding: 1rem; background: rgba(102, 126, 234, 0.1); border-radius: 8px;">
+            <div style="font-size: 0.9rem; color: #667eea; font-weight: 600; margin-bottom: 0.5rem;">Plant Specifications</div>
+            <ul style="list-style: none; font-size: 0.95rem; line-height: 1.8; color: #333;">
+                <li>🏭 <strong>Type:</strong> Dark Fermentation (anaerobic)</li>
+                <li>📊 <strong>Plant Life:</strong> 20 years</li>
+                <li>⚙️ <strong>Capacity Factor:</strong> 90%</li>
+                <li>💵 <strong>Discount Rate:</strong> 8%</li>
+            </ul>
+        </div>
+        <div style="padding: 1rem; background: rgba(245, 87, 108, 0.1); border-radius: 8px;">
+            <div style="font-size: 0.9rem; color: #f5576c; font-weight: 600; margin-bottom: 0.5rem;">Cost Components (per kg H₂)</div>
+            <ul style="list-style: none; font-size: 0.95rem; line-height: 1.8; color: #333;">
+                <li>🏢 <strong>Capital (annualized):</strong> $0.20/kg</li>
+                <li>🔧 <strong>Fixed Operations:</strong> $0.06/kg</li>
+                <li>🌾 <strong>Feedstock:</strong> $1.86/kg</li>
+                <li>⚡ <strong>Utilities:</strong> $0.59/kg</li>
+            </ul>
+        </div>
+        <div style="padding: 1rem; background: rgba(79, 172, 254, 0.1); border-radius: 8px;">
+            <div style="font-size: 0.9rem; color: #4facfe; font-weight: 600; margin-bottom: 0.5rem;">Annual Production & Cost</div>
+            <ul style="list-style: none; font-size: 0.95rem; line-height: 1.8; color: #333;">
+                <li>📦 <strong>Output:</strong> {{ "{:,.0f}".format(data.summary.get('Annual H2 (kg/yr)', 0)) }} kg/year</li>
+                <li>💰 <strong>LCOH Total:</strong> ${{ "%.2f"|format(data.summary.get('LCOH ($/kg H2)', 0)) }}/kg</li>
+                <li>💵 <strong>Annual Revenue:</strong> ${{ "{:,.2f}".format(data.summary.get('Annual H2 (kg/yr)', 0) * data.summary.get('LCOH ($/kg H2)', 0)) }}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
